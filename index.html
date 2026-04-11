@@ -1,0 +1,1584 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NanoCem UT-9 | Ультрадисперсный тампонажный цемент | ТОО ЭкоМикс</title>
+  <meta name="description" content="NanoCem UT-9 — ультрадисперсный тампонажный цемент с размером частиц менее 10 мкм. Рост дебита нефти в 6.3 раза. Производитель ТОО ЭкоМикс, Казахстан.">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+  <style>
+    /* ========================
+       RESET & BASE
+    ======================== */
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0D1B2A;
+      color: #fff;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    /* ========================
+       CSS VARIABLES
+    ======================== */
+    :root {
+      --bg:     #0D1B2A;
+      --bg2:    #1B2E44;
+      --bg3:    #263D5A;
+      --teal:   #0D9488;
+      --teal2:  #14B8A6;
+      --red:    #EF4444;
+      --green:  #22C55E;
+      --orange: #F97316;
+      --dim:    #94A3B8;
+      --muted:  #64748B;
+    }
+
+    /* ========================
+       TYPOGRAPHY
+    ======================== */
+    h1, h2, h3 { font-family: 'Montserrat', sans-serif; font-weight: 900; }
+
+    /* ========================
+       HEADER
+    ======================== */
+    #site-header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 9999;
+      height: 72px;
+      display: flex;
+      align-items: center;
+      transition: background 0.3s, box-shadow 0.3s;
+    }
+    #site-header.scrolled {
+      background: rgba(13,27,42,0.97);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 1px 0 rgba(13,148,136,0.3);
+    }
+    .header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .header-logo {
+      height: 32px;
+      background: #fff;
+      border-radius: 6px;
+      padding: 4px 10px;
+      display: block;
+    }
+    .header-nav { display: flex; gap: 32px; list-style: none; }
+    .header-nav a {
+      color: var(--dim);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      transition: color 0.2s;
+    }
+    .header-nav a:hover { color: var(--teal2); }
+    .header-cta {
+      background: linear-gradient(135deg, var(--teal), var(--teal2));
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 10px 20px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      transition: filter 0.2s, transform 0.2s;
+    }
+    .header-cta:hover { filter: brightness(1.15); transform: translateY(-1px); }
+
+    /* ========================
+       UTILITIES
+    ======================== */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    .section { padding: 100px 0; }
+    .section-tag {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--teal2);
+      margin-bottom: 14px;
+    }
+    .section-title {
+      font-size: 40px;
+      font-weight: 900;
+      line-height: 1.1;
+      margin-bottom: 16px;
+    }
+    .section-sub {
+      font-size: 16px;
+      color: var(--dim);
+      max-width: 580px;
+      line-height: 1.7;
+    }
+    .teal { color: var(--teal2); }
+    .card {
+      background: var(--bg2);
+      border: 1px solid var(--bg3);
+      border-radius: 16px;
+      padding: 28px;
+    }
+    /* Scroll reveal */
+    .reveal { 
+      opacity: 0; 
+      transform: translateY(24px); 
+      transition: opacity 0.65s ease, transform 0.65s ease; 
+    }
+    .reveal.visible { 
+      opacity: 1; 
+      transform: translateY(0); 
+    }
+
+    /* ========================
+       PARTICLE CANVAS
+    ======================== */
+    #particle-canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.25;
+    }
+
+    /* ========================
+       HERO
+    ======================== */
+    #hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      padding-top: 72px;
+      background: radial-gradient(ellipse 80% 60% at 70% 50%, rgba(13,148,136,0.12) 0%, transparent 70%), #0D1B2A;
+    }
+    .hero-bg-img {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      overflow: hidden;
+    }
+    .hero-bg-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      opacity: 0.18;
+      filter: saturate(0.5);
+    }
+    .hero-grid {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 60px;
+      align-items: center;
+      width: 100%;
+    }
+    .hero-left {}
+    .hero-pretitle {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--teal2);
+      margin-bottom: 18px;
+    }
+    .hero-title {
+      font-size: 80px;
+      font-weight: 900;
+      line-height: 0.95;
+      margin-bottom: 12px;
+    }
+    .hero-title .accent { color: var(--teal2); }
+    .hero-subtitle {
+      font-size: 18px;
+      color: var(--dim);
+      max-width: 480px;
+      margin-bottom: 36px;
+      line-height: 1.7;
+    }
+    .hero-btns { display: flex; gap: 16px; flex-wrap: wrap; }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--teal), var(--teal2));
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 14px 28px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+      box-shadow: 0 8px 24px rgba(13,148,136,0.35);
+    }
+    .btn-primary:hover { filter: brightness(1.1); transform: translateY(-2px); }
+    .btn-outline {
+      background: transparent;
+      color: #fff;
+      border: 1px solid var(--bg3);
+      border-radius: 12px;
+      padding: 14px 28px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+    .btn-outline:hover { border-color: var(--teal2); color: var(--teal2); }
+
+    /* ========================
+       3D BAG
+    ======================== */
+    .bag-scene {
+      perspective: 1000px;
+      flex-shrink: 0;
+    }
+    .bag-3d {
+      width: 280px;
+      height: 400px;
+      position: relative;
+      transform-style: preserve-3d;
+      transform: rotateY(-18deg) rotateX(5deg);
+      transition: transform 0.08s linear;
+      cursor: grab;
+    }
+    /* Front face */
+    .bag-front {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(160deg, #1c1c1c 0%, #0a0a0a 100%);
+      border: 1px solid #2a2a2a;
+      border-radius: 10px;
+      padding: 22px 20px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.06);
+      transform: translateZ(0px);
+    }
+    /* Right side face */
+    .bag-side {
+      position: absolute;
+      top: 0; left: 280px;
+      width: 50px;
+      height: 400px;
+      background: linear-gradient(180deg, #111 0%, #1a1a1a 100%);
+      border: 1px solid #222;
+      border-radius: 0 4px 4px 0;
+      transform-origin: left center;
+      transform: rotateY(90deg) translateZ(0px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .bag-side-txt {
+      writing-mode: vertical-lr;
+      transform: rotate(180deg);
+      font-size: 8px;
+      color: #3a3a3a;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    /* Bag bottom */
+    .bag-bottom {
+      position: absolute;
+      bottom: -30px; left: 10px;
+      width: 260px;
+      height: 30px;
+      background: linear-gradient(180deg,#0a0a0a,#050505);
+      border: 1px solid #222;
+      border-radius: 0 0 6px 6px;
+      transform-origin: top center;
+      transform: rotateX(-90deg) translateZ(0px);
+    }
+    /* Bag inner design */
+    .bag-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #2a2a2a;
+      padding-bottom: 12px;
+      margin-bottom: 16px;
+    }
+    .bag-logo-img {
+      height: 20px;
+      filter: brightness(0) invert(1);
+    }
+    .bag-cert-badge {
+      font-size: 6px;
+      color: var(--teal);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      border: 1px solid var(--teal);
+      border-radius: 3px;
+      padding: 2px 5px;
+    }
+    .bag-center {
+      flex: 1;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+    .bag-diamonds {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5px;
+      width: 52px;
+      margin-top: 6px;
+      flex-shrink: 0;
+    }
+    .diamond {
+      width: 22px;
+      height: 22px;
+      background: #fff;
+      transform: rotate(45deg);
+      border-radius: 2px;
+    }
+    .diamond.d { background: #2a2a2a; }
+    .bag-name-block {}
+    .bag-name-nanocem {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 22px;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: -0.5px;
+      line-height: 1;
+    }
+    .bag-name-ut {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 56px;
+      font-weight: 900;
+      color: var(--teal2);
+      letter-spacing: -2px;
+      line-height: 0.9;
+    }
+    .bag-desc {
+      font-size: 7px;
+      color: #555;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      line-height: 1.8;
+      margin-top: 6px;
+    }
+    .bag-stripe {
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, var(--teal), var(--teal2), transparent);
+      margin: 14px 0;
+      border-radius: 2px;
+    }
+    .bag-footer-row {
+      border-top: 1px solid #2a2a2a;
+      padding-top: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+    .bag-weight-num {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 28px;
+      font-weight: 900;
+      color: #fff;
+      line-height: 1;
+    }
+    .bag-weight-label { font-size: 7px; color: #555; margin-top: 2px; }
+    .bag-maker {
+      font-size: 6px;
+      color: #444;
+      text-align: right;
+      line-height: 1.7;
+    }
+
+    /* ========================
+       HERO KPIs (below hero content)
+    ======================== */
+    .hero-kpis {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--bg3);
+      border-radius: 16px;
+      overflow: hidden;
+      margin-top: 80px;
+    }
+    .kpi-block {
+      background: var(--bg2);
+      padding: 28px 32px;
+      display: flex;
+      gap: 18px;
+      align-items: center;
+    }
+    .kpi-icon { font-size: 28px; }
+    .kpi-val {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 36px;
+      font-weight: 900;
+      line-height: 1;
+    }
+    .kpi-lbl { font-size: 12px; color: var(--dim); margin-top: 4px; line-height: 1.4; }
+
+    /* ========================
+       PARTICLE SIZE COMPARISON
+    ======================== */
+    #comparison { background: linear-gradient(180deg, #0D1B2A 0%, #0f2030 100%); }
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+    .comparison-img-wrap {
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid var(--bg3);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    }
+    .comparison-img-wrap img { 
+      width: 100%; 
+      display: block;
+    }
+    .comparison-content .section-title { font-size: 34px; }
+    .particle-bars { margin-top: 32px; display: flex; flex-direction: column; gap: 20px; }
+    .pbar-label {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 13px;
+    }
+    .pbar-label span:first-child { font-weight: 600; }
+    .pbar-label span:last-child { color: var(--teal2); font-weight: 700; }
+    .pbar-track {
+      background: var(--bg3);
+      height: 10px;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+    .pbar-fill {
+      height: 100%;
+      border-radius: 5px;
+      transition: width 1.5s cubic-bezier(0.4,0,0.2,1);
+    }
+    .pbar-fill.nanocem { background: linear-gradient(90deg, var(--teal), var(--teal2)); width: 0; }
+    .pbar-fill.portland { background: linear-gradient(90deg, #ef4444, #f97316); width: 0; }
+
+    /* ========================
+       SCHEME SECTION
+    ======================== */
+    #scheme { background: var(--bg2); }
+    .scheme-wrap {
+      display: grid;
+      grid-template-columns: 1fr 1.6fr;
+      gap: 60px;
+      align-items: center;
+    }
+    .scheme-img-box {
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid var(--bg3);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    }
+    .scheme-img-box img { width: 100%; display: block; }
+    .scheme-steps { display: flex; flex-direction: column; gap: 20px; }
+    .scheme-step {
+      display: flex;
+      gap: 18px;
+      align-items: flex-start;
+      padding: 22px;
+      background: var(--bg);
+      border-radius: 14px;
+      border: 1px solid var(--bg3);
+      transition: border-color 0.3s, transform 0.3s;
+    }
+    .scheme-step:hover { border-color: var(--teal); transform: translateX(6px); }
+    .scheme-step-num {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 16px;
+      font-weight: 900;
+      flex-shrink: 0;
+    }
+    .scheme-step-title { font-weight: 700; margin-bottom: 6px; }
+    .scheme-step-desc { font-size: 13px; color: var(--dim); line-height: 1.6; }
+
+    /* ========================
+       RESULTS / CHART
+    ======================== */
+    #results { background: #0D1B2A; }
+    .results-header { margin-bottom: 60px; }
+    .chart-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+    .chart-box {
+      background: var(--bg2);
+      border: 1px solid var(--bg3);
+      border-radius: 20px;
+      padding: 28px;
+    }
+    .chart-title { font-weight: 700; margin-bottom: 4px; }
+    .chart-sub { font-size: 12px; color: var(--muted); margin-bottom: 20px; }
+    .mini-stats {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .mini-stat {
+      background: var(--bg2);
+      border: 1px solid var(--bg3);
+      border-radius: 14px;
+      padding: 20px 24px;
+    }
+    .mini-stat-val {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 32px;
+      font-weight: 900;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .mini-stat-lbl { font-size: 12px; color: var(--dim); line-height: 1.4; }
+    /* Phase timeline */
+    .phase-timeline {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      margin-top: 24px;
+    }
+    .phase-card {
+      background: var(--bg2);
+      border: 1px solid var(--bg3);
+      border-radius: 14px;
+      padding: 20px;
+      text-align: center;
+      transition: transform 0.2s;
+    }
+    .phase-card:hover { transform: translateY(-4px); }
+    .phase-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      margin: 0 auto 10px;
+    }
+    .phase-date { font-size: 11px; color: var(--muted); margin-bottom: 6px; font-weight: 600; }
+    .phase-val { font-family: 'Montserrat', sans-serif; font-size: 22px; font-weight: 900; line-height: 1; margin-bottom: 2px; }
+    .phase-label { font-size: 11px; color: var(--dim); }
+
+    /* ========================
+       SPECS
+    ======================== */
+    #specs { background: var(--bg2); }
+    .specs-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+    .specs-table-box { background: var(--bg); border: 1px solid var(--bg3); border-radius: 16px; overflow: hidden; }
+    .specs-table-box table { width: 100%; border-collapse: collapse; }
+    .specs-table-box thead th {
+      background: rgba(13,148,136,0.12);
+      color: var(--teal2);
+      text-align: left;
+      padding: 14px 20px;
+      font-size: 11px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      font-weight: 700;
+      border-bottom: 2px solid var(--teal);
+    }
+    .specs-table-box tbody td {
+      padding: 12px 20px;
+      font-size: 14px;
+      border-bottom: 1px solid rgba(38,61,90,0.5);
+      color: var(--dim);
+    }
+    .specs-table-box tbody td:first-child {
+      color: var(--teal2);
+      font-size: 12px;
+      font-weight: 600;
+      width: 45%;
+    }
+    .specs-table-box tbody td:last-child { color: #fff; font-weight: 500; }
+    .specs-table-box tbody tr:hover { background: rgba(13,148,136,0.04); }
+    /* oxide composition */
+    .oxide-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .oxide-item {
+      background: var(--bg);
+      border: 1px solid var(--bg3);
+      border-radius: 10px;
+      padding: 14px 16px;
+    }
+    .oxide-formula { font-size: 15px; font-weight: 700; color: var(--teal2); margin-bottom: 4px; }
+    .oxide-val { font-size: 13px; color: var(--dim); }
+
+    /* ========================
+       INTERACTIVE PARTICLE DEMO
+    ======================== */
+    #particle-demo {
+      background: #0a1520;
+      padding: 100px 0;
+      overflow: hidden;
+    }
+    .demo-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+    .crack-demo {
+      position: relative;
+      height: 420px;
+      background: var(--bg2);
+      border: 1px solid var(--bg3);
+      border-radius: 20px;
+      overflow: hidden;
+    }
+    #crack-canvas { display: block; width: 100%; height: 100%; }
+    .demo-cta {
+      text-align: center;
+      margin-top: 20px;
+    }
+    .demo-note { font-size: 13px; color: var(--muted); margin-bottom: 14px; }
+    .demo-toggle-btns { display: flex; gap: 12px; justify-content: center; }
+    .demo-btn {
+      padding: 10px 20px;
+      border-radius: 10px;
+      border: 1px solid var(--bg3);
+      background: var(--bg2);
+      color: var(--dim);
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .demo-btn.active { border-color: var(--teal2); color: var(--teal2); background: rgba(13,148,136,0.1); }
+    .demo-right { }
+    .mechanism-card {
+      background: var(--bg2);
+      border: 1px solid var(--bg3);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 16px;
+      border-left: 3px solid transparent;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .mechanism-card.active { border-left-color: var(--teal); background: rgba(13,148,136,0.06); }
+    .mechanism-num { font-size: 28px; font-weight: 900; color: var(--teal); margin-bottom: 6px; font-family: 'Montserrat', sans-serif; }
+    .mechanism-title { font-weight: 700; margin-bottom: 8px; }
+    .mechanism-desc { font-size: 13px; color: var(--dim); line-height: 1.6; }
+
+    /* ========================
+       FOOTER
+    ======================== */
+    #footer {
+      background: #070e17;
+      padding: 80px 0 40px;
+      border-top: 1px solid rgba(255,255,255,0.04);
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 60px;
+      margin-bottom: 60px;
+    }
+    .footer-logo { height: 32px; background: #fff; border-radius: 6px; padding: 5px 10px; margin-bottom: 18px; display: block; }
+    .footer-about { font-size: 14px; color: var(--dim); line-height: 1.7; }
+    .footer-col-title { font-size: 13px; font-weight: 700; margin-bottom: 20px; letter-spacing: 0.5px; }
+    .footer-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .footer-links a { color: var(--dim); text-decoration: none; font-size: 14px; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--teal2); }
+    .footer-contact-item { display: flex; gap: 12px; margin-bottom: 14px; font-size: 14px; color: var(--dim); align-items: flex-start; }
+    .footer-contact-icon { color: var(--teal2); flex-shrink: 0; margin-top: 2px; }
+    .footer-bottom {
+      padding-top: 32px;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .footer-copy { font-size: 13px; color: var(--muted); }
+
+    /* ========================
+       SCROLL INDICATOR
+    ======================== */
+    #scroll-progress {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--teal), var(--teal2));
+      transform-origin: left;
+      transform: scaleX(0);
+      z-index: 10000;
+      transition: transform 0.1s;
+    }
+
+    /* ========================
+       RESPONSIVE
+    ======================== */
+    @media (max-width: 900px) {
+      .hero-grid, .comparison-grid, .scheme-wrap, .chart-grid, .specs-layout, .demo-layout, .footer-grid {
+        grid-template-columns: 1fr;
+      }
+      .hero-title { font-size: 52px; }
+      .bag-scene { display: none; }
+      .hero-kpis { grid-template-columns: 1fr; }
+      .phase-timeline { grid-template-columns: repeat(3, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Scroll progress bar -->
+<div id="scroll-progress"></div>
+
+<!-- Particle background canvas -->
+<canvas id="particle-canvas"></canvas>
+
+<!-- ========================
+     HEADER
+======================== -->
+<header id="site-header">
+  <div class="header-inner">
+    <a href="#hero"><img src="LOGO.png" alt="EASYMIX" class="header-logo"></a>
+    <nav>
+      <ul class="header-nav">
+        <li><a href="#comparison">Продукт</a></li>
+        <li><a href="#scheme">Технология</a></li>
+        <li><a href="#results">Результаты</a></li>
+        <li><a href="#specs">Характеристики</a></li>
+        <li><a href="#footer">Контакты</a></li>
+      </ul>
+    </nav>
+    <a href="#footer" class="header-cta">Заказать →</a>
+  </div>
+</header>
+
+<!-- ========================
+     HERO
+======================== -->
+<section id="hero">
+  <div class="hero-bg-img">
+    <img src="hero_background_rig_night_1775911514995.png" alt="Буровая установка ночью">
+  </div>
+  <div class="container" style="position:relative;z-index:2;width:100%;">
+    <div class="hero-grid">
+      <div class="hero-left reveal">
+        <div class="hero-pretitle">Месторождение Каратюбе · Скважина 343 · 2026</div>
+        <h1 class="hero-title">NanoCem<br><span class="accent">UT-9</span></h1>
+        <p class="hero-subtitle">Ультрадисперсный тампонажный цемент с размером частиц&nbsp;<strong style="color:#fff">&lt;10&nbsp;мкм</strong>. Проникает в микротрещины, куда обычный&nbsp;цемент физически не способен попасть.</p>
+        <div class="hero-btns">
+          <a href="#results" class="btn-primary">📊 Смотреть результаты</a>
+          <a href="#comparison" class="btn-outline">🔬 Как это работает</a>
+        </div>
+      </div>
+      <!-- 3D Bag -->
+      <div class="bag-scene reveal" id="bag-scene">
+        <div class="bag-3d" id="bag3d">
+          <div class="bag-front">
+            <div class="bag-header-row">
+              <img src="LOGO.png" alt="EASYMIX" class="bag-logo-img">
+              <div class="bag-cert-badge">Pro Grade</div>
+            </div>
+            <div class="bag-center">
+              <div>
+                <div class="bag-diamonds">
+                  <div class="diamond"></div>
+                  <div class="diamond d"></div>
+                  <div class="diamond d"></div>
+                  <div class="diamond"></div>
+                </div>
+              </div>
+              <div class="bag-name-block">
+                <div class="bag-name-nanocem">NANOCEM</div>
+                <div class="bag-name-ut">UT-9</div>
+                <div class="bag-desc">
+                  ҰҢҒЫМАЛАРҒА АРНАЛҒАН<br>УЛЬТРАЖҰҚА ЦЕМЕНТІ<br>──────────────────<br>УЛЬТРАТОНКИЙ ЦЕМЕНТ<br>ДЛЯ СКВАЖИН · D97&lt;10μm
+                </div>
+              </div>
+            </div>
+            <div class="bag-stripe"></div>
+            <div class="bag-footer-row">
+              <div>
+                <div class="bag-weight-num">25<span style="font-size:18px">kg</span></div>
+                <div class="bag-weight-label">Net Weight · Нетто</div>
+              </div>
+              <div class="bag-maker">
+                ТОО «ЭкоМикс»<br>Актобе, Казахстан<br>EASYMIX.KZ
+              </div>
+            </div>
+          </div>
+          <div class="bag-side">
+            <div class="bag-side-txt">NANOCEM UT-9 · ULTRAFINE CEMENT · 25KG · EASYMIX · KZ</div>
+          </div>
+          <div class="bag-bottom"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- KPI row -->
+    <div class="hero-kpis">
+      <div class="kpi-block reveal">
+        <div class="kpi-icon">🛢️</div>
+        <div>
+          <div class="kpi-val" style="color:var(--teal2);">×6.3</div>
+          <div class="kpi-lbl">Рост дебита нефти<br>2.6 → 16.4 т/сут</div>
+        </div>
+      </div>
+      <div class="kpi-block reveal" style="transition-delay:0.1s">
+        <div class="kpi-icon">💧</div>
+        <div>
+          <div class="kpi-val" style="color:var(--red);">−57 п.п.</div>
+          <div class="kpi-lbl">Снижение обводнённости<br>89.4% → 27.5%</div>
+        </div>
+      </div>
+      <div class="kpi-block reveal" style="transition-delay:0.2s">
+        <div class="kpi-icon">✅</div>
+        <div>
+          <div class="kpi-val" style="color:var(--green);">45 дней</div>
+          <div class="kpi-lbl">Непрерывного улучшения<br>без единого срыва</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================
+     COMPARISON (Particles)
+======================== -->
+<section id="comparison" class="section" style="background:#0D1B2A;">
+  <div class="container">
+    <div class="comparison-grid">
+      <div class="comparison-img-wrap">
+        <img src="comparison.png" alt="Сравнение размеров частиц NanoCem vs Portland">
+      </div>
+      <div class="comparison-content reveal" style="transition-delay:0.15s">
+        <div class="section-tag">Физика успеха</div>
+        <h2 class="section-title">Частицы <span class="teal">в 4 раза</span> меньше обычного цемента</h2>
+        <p class="section-sub" style="margin-bottom:36px;">Обычный портландцемент физически <strong>не проходит</strong> в микротрещины пласта шириной 0.01–0.02 мм. NanoCem UT-9 с частицами D97 &lt;10 мкм&#160;— проходит.</p>
+        <div class="particle-bars">
+          <div>
+            <div class="pbar-label">
+              <span>NanoCem UT-9</span>
+              <span>D97 &lt;10 мкм ✓</span>
+            </div>
+            <div class="pbar-track">
+              <div class="pbar-fill nanocem" id="bar-nano" style="width:22%"></div>
+            </div>
+          </div>
+          <div>
+            <div class="pbar-label">
+              <span>Обычный портландцемент</span>
+              <span>D97 ~40 мкм ✗</span>
+            </div>
+            <div class="pbar-track">
+              <div class="pbar-fill portland" id="bar-port" style="width:88%"></div>
+            </div>
+          </div>
+          <div>
+            <div class="pbar-label">
+              <span>Ширина микротрещины</span>
+              <span>0.01–0.02 мм</span>
+            </div>
+            <div class="pbar-track" style="position:relative;">
+              <div style="position:absolute;top:0;left:22%;height:100%;width:2px;background:var(--teal2);z-index:2;"></div>
+              <div style="background:rgba(38,61,90,0.5);width:22%;height:100%;border-radius:5px 0 0 5px;"></div>
+              <div style="background:rgba(239,68,68,0.15);width:66%;height:100%;"></div>
+            </div>
+          </div>
+        </div>
+        <p style="margin-top:24px;font-size:12px;color:var(--muted);">Вертикальная линия — граница проникновения в микротрещину.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================
+     SCHEME (Mining)
+======================== -->
+<section id="scheme" class="section" style="background:var(--bg2);">
+  <div class="container">
+    <div class="scheme-wrap">
+      <div>
+        <div class="section-tag">Как это работает</div>
+        <h2 class="section-title" style="margin-bottom:16px;">Схема добычи<br>и перфорации</h2>
+        <p class="section-sub" style="margin-bottom:40px;">Три этапа ремонтно-изоляционных работ с применением NanoCem UT-9 на нефтяной скважине.</p>
+        <div class="scheme-steps">
+          <div class="scheme-step reveal">
+            <div class="scheme-step-num" style="background:rgba(239,68,68,0.15);color:var(--red);">1</div>
+            <div>
+              <div class="scheme-step-title">Перфорация и установка пакера</div>
+              <div class="scheme-step-desc">Создаются сквозные каналы в обсадной колонне; пакер надёжно изолирует водонасыщенную зону перед закачкой.</div>
+            </div>
+          </div>
+          <div class="scheme-step reveal" style="transition-delay:0.1s">
+            <div class="scheme-step-num" style="background:rgba(249,115,22,0.15);color:var(--orange);">2</div>
+            <div>
+              <div class="scheme-step-title">Закачка NanoCem UT-9</div>
+              <div class="scheme-step-desc">Ультрадисперсный состав (D97&lt;10 мкм) под давлением проникает в водяные каналы и поровое пространство, заполняя любые поры шириной менее 0.02&nbsp;мм.</div>
+            </div>
+          </div>
+          <div class="scheme-step reveal" style="transition-delay:0.2s">
+            <div class="scheme-step-num" style="background:rgba(34,197,94,0.15);color:var(--green);">3</div>
+            <div>
+              <div class="scheme-step-title">Твердение и изоляция</div>
+              <div class="scheme-step-desc">Цемент образует прочный тампон, необратимо закрывая пути обводнения. Эффект нарастает в течение 45 дней.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="scheme-img-box" style="transition-delay:0.2s">
+        <img src="scheme.png" alt="Схема добычи и перфорации NanoCem UT-9">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================
+     INTERACTIVE PARTICLE DEMO
+======================== -->
+<section id="particle-demo" class="section" style="padding:80px 0;">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:60px;" class="reveal">
+      <div class="section-tag">Интерактивная демонстрация</div>
+      <h2 class="section-title" style="margin-bottom:12px;">Как цемент проникает в трещину</h2>
+      <p class="section-sub" style="margin:0 auto;">Нажмите кнопку чтобы увидеть разницу между NanoCem UT-9 и обычным цементом.</p>
+    </div>
+    <div class="demo-layout">
+      <div class="reveal">
+        <div class="crack-demo">
+          <canvas id="crack-canvas"></canvas>
+        </div>
+        <div class="demo-cta">
+          <p class="demo-note">Выберите тип цемента для симуляции проникновения:</p>
+          <div class="demo-toggle-btns">
+            <button class="demo-btn active" id="btn-nanocem" onclick="setMode('nano')">NanoCem UT-9 (9 мкм)</button>
+            <button class="demo-btn" id="btn-portland" onclick="setMode('portland')">Портландцемент (40 мкм)</button>
+          </div>
+        </div>
+      </div>
+      <div class="reveal" style="transition-delay:0.15s">
+        <div class="mechanism-card active" id="m1">
+          <div class="mechanism-num">01</div>
+          <div class="mechanism-title">Ультратонкое проникновение</div>
+          <div class="mechanism-desc">Частицы &lt;10 мкм физически проходят в микроканалы шириной 0.01 мм, недоступные для стандартного цемента (D97&nbsp;&gt;40&nbsp;мкм).</div>
+        </div>
+        <div class="mechanism-card" id="m2">
+          <div class="mechanism-num">02</div>
+          <div class="mechanism-title">Избирательная изоляция</div>
+          <div class="mechanism-desc">Цемент заполняет водонасыщенные зоны с высокой проницаемостью — именно там вода движется быстрее всего.</div>
+        </div>
+        <div class="mechanism-card" id="m3">
+          <div class="mechanism-num">03</div>
+          <div class="mechanism-title">Нарастающий эффект</div>
+          <div class="mechanism-desc">После твердения образуется прочный тампон. Эффект нарастает 45 дней: обводнённость снизилась с 83% (03.02) до 27.5% (19.03).</div>
+        </div>
+        <div class="mechanism-card" id="m4">
+          <div class="mechanism-num">04</div>
+          <div class="mechanism-title">Химическая совместимость</div>
+          <div class="mechanism-desc">CaO ≥63%, SiO₂ 19–25% обеспечивают адгезию к породе и совместимость с пластовыми флюидами месторождения Каратюбе.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================
+     RESULTS
+======================== -->
+<section id="results" class="section" style="background:#0D1B2A;">
+  <div class="container">
+    <div class="results-header reveal">
+      <div class="section-tag">Доказанная эффективность</div>
+      <h2 class="section-title">Результаты на <span class="teal">Скважине 343</span></h2>
+      <p class="section-sub">Месторождение Каратюбе · Январь–Апрель 2026 · ТОО «ЭкоМикс»</p>
+    </div>
+    <div class="chart-grid reveal">
+      <div class="chart-box">
+        <div class="chart-title">Динамика дебита нефти и обводнённости</div>
+        <div class="chart-sub">Скважина 343 | 15.01 – 08.04.2026 | Зелёная зона — после РИР</div>
+        <canvas id="chartMain" style="max-height:300px;"></canvas>
+      </div>
+      <div class="mini-stats">
+        <div class="mini-stat" style="border-top:3px solid var(--teal2);">
+          <div class="mini-stat-val" style="color:var(--teal2);">16.4 т/сут</div>
+          <div class="mini-stat-lbl">Пиковый дебит нефти<br>(19.03.2026, был 1.1 т/сут)</div>
+        </div>
+        <div class="mini-stat" style="border-top:3px solid var(--red);">
+          <div class="mini-stat-val" style="color:var(--red);">27.5%</div>
+          <div class="mini-stat-lbl">Минимальная обводнённость<br>(было 89.4%)</div>
+        </div>
+        <div class="mini-stat" style="border-top:3px solid var(--green);">
+          <div class="mini-stat-val" style="color:var(--green);">+354 т</div>
+          <div class="mini-stat-lbl">Дополнительная нефть<br>каждый месяц с одной скважины</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phase timeline -->
+    <div class="phase-timeline reveal">
+      <div class="phase-card">
+        <div class="phase-dot" style="background:var(--red);"></div>
+        <div class="phase-date">28.01.2026</div>
+        <div class="phase-val" style="color:var(--red);">1.1</div>
+        <div class="phase-label">т/сут | Обв: 89.4%</div>
+      </div>
+      <div class="phase-card">
+        <div class="phase-dot" style="background:var(--orange);"></div>
+        <div class="phase-date">03.02.2026</div>
+        <div class="phase-val" style="color:var(--orange);">2.1</div>
+        <div class="phase-label">т/сут | Запуск после РИР</div>
+      </div>
+      <div class="phase-card">
+        <div class="phase-dot" style="background:var(--teal2);"></div>
+        <div class="phase-date">19.02.2026</div>
+        <div class="phase-val" style="color:var(--teal2);">11.5</div>
+        <div class="phase-label">т/сут | Обв: 38.4%</div>
+      </div>
+      <div class="phase-card" style="border-color:var(--green);">
+        <div class="phase-dot" style="background:var(--green);"></div>
+        <div class="phase-date">19.03.2026 · ПИК</div>
+        <div class="phase-val" style="color:var(--green);">16.4</div>
+        <div class="phase-label">т/сут | Обв: 27.5%</div>
+      </div>
+      <div class="phase-card">
+        <div class="phase-dot" style="background:#60A5FA;"></div>
+        <div class="phase-date">08.04.2026</div>
+        <div class="phase-val" style="color:#60A5FA;">14.4</div>
+        <div class="phase-label">т/сут | Стабилизация</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================
+     SPECS
+======================== -->
+<section id="specs" class="section" style="background:var(--bg2);">
+  <div class="container">
+    <div class="reveal" style="text-align:center;margin-bottom:60px;">
+      <div class="section-tag">Состав и характеристики</div>
+      <h2 class="section-title">Технические данные</h2>
+      <p class="section-sub" style="margin:0 auto;">Паспорт безопасности и оксидный состав NanoCem UT-9</p>
+    </div>
+    <div class="specs-layout reveal">
+      <div>
+        <div class="specs-table-box">
+          <table>
+            <thead><tr><th>Параметр</th><th>Значение</th></tr></thead>
+            <tbody>
+              <tr><td>Размер частиц D97</td><td>&lt; 10 мкм (ультратонкий)</td></tr>
+              <tr><td>Вяжущее (стандарт)</td><td>CEM I 42.5 N (EN 197-1)</td></tr>
+              <tr><td>pH 10% суспензии</td><td>11–13 (щелочной)</td></tr>
+              <tr><td>Прочность на сжатие</td><td>≥ 12 МПа (24 ч) · ≥ 65 МПа (28 сут)</td></tr>
+              <tr><td>Плотность суспензии</td><td>1.85–1.95 г/см³</td></tr>
+              <tr><td>Водосодержание BWOC</td><td>80–120%</td></tr>
+              <tr><td>Температурный диапазон</td><td>+5 … +120 °C</td></tr>
+              <tr><td>Адгезия к бетону</td><td>≥ 2.5 МПа</td></tr>
+              <tr><td>Водонепроницаемость</td><td>W14 – W16</td></tr>
+              <tr><td>Морозостойкость</td><td>F75 – F100</td></tr>
+              <tr><td>Срок хранения</td><td>12 мес. (сухое, −40…+40 °C)</td></tr>
+              <tr><td>Фасовка</td><td>Мешок 25 кг</td></tr>
+              <tr><td>Стандарт поставки</td><td>INCOTERMS 2020 DDP</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div>
+        <h3 style="margin-bottom:20px;font-size:18px;">Оксидный состав</h3>
+        <div class="oxide-grid">
+          <div class="oxide-item"><div class="oxide-formula">CaO</div><div class="oxide-val">≥ 63%</div></div>
+          <div class="oxide-item"><div class="oxide-formula">SiO₂</div><div class="oxide-val">19–25%</div></div>
+          <div class="oxide-item"><div class="oxide-formula">Al₂O₃</div><div class="oxide-val">3–8%</div></div>
+          <div class="oxide-item"><div class="oxide-formula">Fe₂O₃</div><div class="oxide-val">2–5%</div></div>
+          <div class="oxide-item"><div class="oxide-formula">MgO</div><div class="oxide-val">≤ 5%</div></div>
+          <div class="oxide-item"><div class="oxide-formula">SO₃</div><div class="oxide-val">≤ 4%</div></div>
+          <div class="oxide-item"><div class="oxide-formula">Na₂O</div><div class="oxide-val">≤ 1%</div></div>
+          <div class="oxide-item"><div class="oxide-formula">K₂O</div><div class="oxide-val">≤ 1%</div></div>
+        </div>
+        <div style="margin-top:24px;background:rgba(13,148,136,0.08);border-left:3px solid var(--teal);border-radius:0 12px 12px 0;padding:18px 22px;">
+          <p style="color:var(--teal2);font-weight:700;margin-bottom:6px;">Производитель</p>
+          <p style="font-size:14px;color:var(--dim);line-height:1.7;">ТОО «ЭкоМикс»<br>Республика Казахстан, г.&nbsp;Актобе<br>Промышленная зона, участок 679/17</p>
+        </div>
+        <div style="margin-top:16px;background:rgba(249,115,22,0.06);border-left:3px solid var(--orange);border-radius:0 12px 12px 0;padding:18px 22px;">
+          <p style="color:var(--orange);font-weight:700;margin-bottom:6px;">⚠️ СИЗ при работе</p>
+          <p style="font-size:13px;color:var(--dim);line-height:1.8;">Очки-герметики · Респиратор FFP3<br>Нитриловые перчатки · Защитный костюм<br>Хорошая вентиляция</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================
+     FOOTER
+======================== -->
+<footer id="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <img src="LOGO.png" alt="EASYMIX" class="footer-logo">
+        <p class="footer-about">ТОО «ЭкоМикс» — казахстанский производитель ультрадисперсных тампонажных и строительных материалов. Продукция соответствует стандарту GOST и EN.</p>
+      </div>
+      <div>
+        <div class="footer-col-title">Продукт</div>
+        <ul class="footer-links">
+          <li><a href="#comparison">О NanoCem UT-9</a></li>
+          <li><a href="#scheme">Технология РИР</a></li>
+          <li><a href="#results">Результаты</a></li>
+          <li><a href="#specs">Характеристики</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Применение</div>
+        <ul class="footer-links">
+          <li><a href="#scheme">Нефтедобыча</a></li>
+          <li><a href="#comparison">Ремонт скважин</a></li>
+          <li><a href="#results">РИР и КРС</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Контакты</div>
+        <div class="footer-contact-item">
+          <span class="footer-contact-icon">📍</span>
+          <span>Актобе, Промзона, уч.&nbsp;679/17</span>
+        </div>
+        <div class="footer-contact-item">
+          <span class="footer-contact-icon">📞</span>
+          <span>+7 (707) 539 00 00</span>
+        </div>
+        <div class="footer-contact-item">
+          <span class="footer-contact-icon">🌐</span>
+          <span>EASYMIX.KZ</span>
+        </div>
+        <div class="footer-contact-item">
+          <span class="footer-contact-icon">📧</span>
+          <span>info@easymix.kz</span>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2026 ТОО «ЭкоМикс». Все права защищены.</div>
+      <div class="footer-copy">Данные скважины 343, м/р Каратюбе · Актуальны на 08.04.2026</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ========================
+// SCROLL PROGRESS
+// ========================
+const progressBar = document.getElementById('scroll-progress');
+window.addEventListener('scroll', () => {
+  const scrollTop = window.scrollY;
+  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+  const progress = scrollTop / docHeight;
+  progressBar.style.transform = `scaleX(${progress})`;
+});
+
+// ========================
+// HEADER SCROLL STATE
+// ========================
+const header = document.getElementById('site-header');
+window.addEventListener('scroll', () => {
+  header.classList.toggle('scrolled', window.scrollY > 60);
+});
+
+// ========================
+// SCROLL REVEAL
+// ========================
+const reveals = document.querySelectorAll('.reveal');
+const ro = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { 
+      e.target.classList.add('visible');
+      // Also make child images fully visible
+      e.target.querySelectorAll('img').forEach(img => { img.style.opacity = '1'; });
+    }
+  });
+}, { threshold: 0.01, rootMargin: '0px 0px -40px 0px' });
+reveals.forEach(r => ro.observe(r));
+// Pre-render images that start in view
+document.querySelectorAll('.comparison-img-wrap, .scheme-img-box').forEach(el => {
+  el.querySelectorAll('img').forEach(img => { img.style.opacity = '1'; });
+});
+
+// ========================
+// 3D BAG MOUSE TRACKING
+// ========================
+const bag = document.getElementById('bag3d');
+if (bag) {
+  document.addEventListener('mousemove', (e) => {
+    const cx = window.innerWidth / 2;
+    const cy = window.innerHeight / 2;
+    const rx = (e.clientY - cy) / 30;
+    const ry = (cx - e.clientX) / 30;
+    bag.style.transform = `rotateY(${-18 + ry}deg) rotateX(${5 - rx}deg)`;
+  });
+}
+
+// ========================
+// PARTICLE BACKGROUND
+// ========================
+(function() {
+  const canvas = document.getElementById('particle-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, particles = [];
+  function resize() {
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+  for (let i = 0; i < 60; i++) {
+    particles.push({
+      x: Math.random() * window.innerWidth,
+      y: Math.random() * window.innerHeight,
+      r: Math.random() * 1.8 + 0.4,
+      vx: (Math.random() - 0.5) * 0.3,
+      vy: (Math.random() - 0.5) * 0.3,
+      alpha: Math.random() * 0.4 + 0.1
+    });
+  }
+  function drawParticles() {
+    ctx.clearRect(0, 0, W, H);
+    particles.forEach(p => {
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(20,184,166,${p.alpha})`;
+      ctx.fill();
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < 0) p.x = W; if (p.x > W) p.x = 0;
+      if (p.y < 0) p.y = H; if (p.y > H) p.y = 0;
+    });
+    // Draw connections
+    for (let i = 0; i < particles.length; i++) {
+      for (let j = i + 1; j < particles.length; j++) {
+        const dx = particles[i].x - particles[j].x;
+        const dy = particles[i].y - particles[j].y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist < 130) {
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.strokeStyle = `rgba(20,184,166,${0.08 * (1 - dist/130)})`;
+          ctx.lineWidth = 0.6;
+          ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(drawParticles);
+  }
+  drawParticles();
+})();
+
+// ========================
+// MAIN CHART (Chart.js)
+// ========================
+(function() {
+  const dates = ['15.01','20.01','25.01','28.01','03.02','04.02','10.02','19.02','01.03','10.03','16.03','19.03','25.03','01.04','08.04'];
+  const oil   = [2.6,2.6,2.6,1.1,2.1,6.2,7.0,11.5,13.3,14.3,14.9,16.4,16.0,14.2,14.4];
+  const water = [85.4,85.4,84.0,89.4,83.0,66.8,62.8,38.4,35.6,35.0,33.2,27.5,28.4,35.7,38.0];
+
+  const ctx = document.getElementById('chartMain');
+  if (!ctx) return;
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: dates,
+      datasets: [
+        {
+          label: 'Дебит нефти, т/сут',
+          data: oil,
+          borderColor: '#14B8A6',
+          backgroundColor: 'rgba(20,184,166,0.1)',
+          tension: 0.4,
+          fill: true,
+          yAxisID: 'y',
+          borderWidth: 2.5,
+          pointRadius: 3,
+          pointBackgroundColor: '#14B8A6'
+        },
+        {
+          label: 'Обводнённость, %',
+          data: water,
+          borderColor: '#EF4444',
+          backgroundColor: 'rgba(239,68,68,0.05)',
+          tension: 0.4,
+          fill: false,
+          yAxisID: 'y2',
+          borderWidth: 2,
+          borderDash: [5,4],
+          pointRadius: 3,
+          pointBackgroundColor: '#EF4444'
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: {
+          labels: { color: '#94A3B8', font: { size: 12 }, boxWidth: 20 }
+        },
+        tooltip: {
+          backgroundColor: '#1B2E44',
+          titleColor: '#fff',
+          bodyColor: '#94A3B8',
+          borderColor: '#263D5A',
+          borderWidth: 1
+        },
+        annotation: {}
+      },
+      scales: {
+        x: {
+          ticks: { color: '#64748B', font: { size: 10 } },
+          grid: { color: 'rgba(38,61,90,0.5)' }
+        },
+        y: {
+          position: 'left',
+          ticks: { color: '#14B8A6', font: { size: 11 } },
+          grid: { color: 'rgba(38,61,90,0.3)' },
+          title: { display: true, text: 'Дебит, т/сут', color: '#14B8A6', font: { size: 11 } }
+        },
+        y2: {
+          position: 'right',
+          ticks: { color: '#EF4444', font: { size: 11 } },
+          grid: { drawOnChartArea: false },
+          title: { display: true, text: 'Обводнённость, %', color: '#EF4444', font: { size: 11 } }
+        }
+      }
+    }
+  });
+})();
+
+// ========================
+// CRACK CANVAS DEMO
+// ========================
+const crackCanvas = document.getElementById('crack-canvas');
+const crackCtx = crackCanvas.getContext('2d');
+let demoMode = 'nano';
+let demoParticles = [];
+let demoAnim;
+
+function initCrackDemo() {
+  const container = crackCanvas.parentElement;
+  crackCanvas.width = container.clientWidth;
+  crackCanvas.height = container.clientHeight;
+  demoParticles = [];
+  cancelAnimationFrame(demoAnim);
+  drawCrack();
+  spawnParticles();
+}
+
+function drawCrack() {
+  const W = crackCanvas.width;
+  const H = crackCanvas.height;
+  crackCtx.clearRect(0,0,W,H);
+
+  // Rock background
+  crackCtx.fillStyle = '#131e2b';
+  crackCtx.fillRect(0,0,W,H);
+
+  // Grid lines (rock texture)
+  crackCtx.strokeStyle = 'rgba(38,61,90,0.3)';
+  crackCtx.lineWidth = 0.5;
+  for (let i = 20; i < W; i += 30) {
+    crackCtx.beginPath(); crackCtx.moveTo(i,0); crackCtx.lineTo(i,H); crackCtx.stroke();
+  }
+  for (let j = 20; j < H; j += 30) {
+    crackCtx.beginPath(); crackCtx.moveTo(0,j); crackCtx.lineTo(W,j); crackCtx.stroke();
+  }
+
+  // CRACK shape — winding vertical crack
+  const cx = W * 0.5;
+  crackCtx.lineWidth = demoMode === 'nano' ? 12 : 12;
+  const grd = crackCtx.createLinearGradient(0,0,0,H);
+  grd.addColorStop(0,'rgba(10,10,10,0.1)');
+  grd.addColorStop(1,'rgba(10,10,10,0.9)');
+  crackCtx.fillStyle = grd;
+
+  // Left rock
+  crackCtx.beginPath();
+  crackCtx.moveTo(0,0);
+  crackCtx.lineTo(cx - 8, 0);
+  crackCtx.lineTo(cx - 10, H*0.3);
+  crackCtx.lineTo(cx - 6, H*0.6);
+  crackCtx.lineTo(cx - 9, H);
+  crackCtx.lineTo(0, H);
+  crackCtx.closePath();
+  crackCtx.fillStyle = '#1a2738';
+  crackCtx.fill();
+  crackCtx.strokeStyle = '#0a1520';
+  crackCtx.lineWidth = 2;
+  crackCtx.stroke();
+
+  // Right rock
+  crackCtx.beginPath();
+  crackCtx.moveTo(W,0);
+  crackCtx.lineTo(cx + 8, 0);
+  crackCtx.lineTo(cx + 10, H*0.3);
+  crackCtx.lineTo(cx + 6, H*0.6);
+  crackCtx.lineTo(cx + 9, H);
+  crackCtx.lineTo(W, H);
+  crackCtx.closePath();
+  crackCtx.fillStyle = '#1a2738';
+  crackCtx.fill();
+  crackCtx.strokeStyle = '#0a1520';
+  crackCtx.lineWidth = 2;
+  crackCtx.stroke();
+
+  // Crack opening (void)
+  crackCtx.beginPath();
+  crackCtx.moveTo(cx - 8, 0);
+  crackCtx.lineTo(cx + 8, 0);
+  crackCtx.lineTo(cx + 10, H*0.3);
+  crackCtx.lineTo(cx + 6, H*0.6);
+  crackCtx.lineTo(cx + 9, H);
+  crackCtx.lineTo(cx - 9, H);
+  crackCtx.lineTo(cx - 6, H*0.6);
+  crackCtx.lineTo(cx - 10, H*0.3);
+  crackCtx.closePath();
+  crackCtx.fillStyle = '#07101a';
+  crackCtx.fill();
+
+  // Labels
+  crackCtx.fillStyle = 'rgba(255,255,255,0.15)';
+  crackCtx.font = '11px Inter';
+  crackCtx.textAlign = 'center';
+  crackCtx.fillText('ГОРНАЯ ПОРОДА', W*0.2, 30);
+  crackCtx.fillText('ГОРНАЯ ПОРОДА', W*0.8, 30);
+
+  crackCtx.fillStyle = 'rgba(100,116,139,0.8)';
+  crackCtx.font = 'bold 10px Inter';
+  crackCtx.fillText('МИКРОТРЕЩИНА ~0.02 мм', cx, H - 14);
+}
+
+function spawnParticles() {
+  const W = crackCanvas.width;
+  const H = crackCanvas.height;
+  const cx = W * 0.5;
+  const particleR = demoMode === 'nano' ? 3.5 : 14;
+  const color = demoMode === 'nano' ? '#14B8A6' : '#EF4444';
+  const crackW = 9;
+
+  demoParticles = [];
+  for (let i = 0; i < (demoMode === 'nano' ? 24 : 8); i++) {
+    demoParticles.push({
+      x: cx + (Math.random() - 0.5) * 160,
+      y: -particleR - Math.random() * H * 0.8,
+      r: particleR,
+      vy: 0.8 + Math.random() * 0.6,
+      vx: (Math.random() - 0.5) * 0.8,
+      alpha: 1,
+      color,
+      entered: false,
+      stuck: false
+    });
+  }
+
+  function animate() {
+    demoAnim = requestAnimationFrame(animate);
+    drawCrack();
+
+    demoParticles.forEach(p => {
+      if (p.stuck) return;
+      p.y += p.vy;
+      p.x += p.vx;
+
+      // Crack boundary check
+      const crackLeft = cx - crackW;
+      const crackRight = cx + crackW;
+      if (demoMode === 'portland') {
+        // big particle can't enter crack — bounce/stop at top
+        if (p.x + p.r > crackLeft && p.x - p.r < crackRight) {
+          if (p.y + p.r > 0) {
+            p.vy = -0.3;
+            p.vx = (Math.random() - 0.5) * 1.5;
+            if (p.y > H * 0.15) { p.stuck = true; }
+          }
+        }
+        if (p.y > H + p.r) { p.y = -p.r - 20; p.x = cx + (Math.random()-0.5)*120; p.stuck = false; }
+      } else {
+        // small particle enters crack
+        if (p.y > H + p.r) { p.y = -p.r - 10; p.x = cx + (Math.random()-0.5)*100; }
+      }
+
+      // Draw particle
+      crackCtx.beginPath();
+      crackCtx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+      crackCtx.fillStyle = p.color;
+      crackCtx.globalAlpha = p.alpha * 0.9;
+      crackCtx.fill();
+      crackCtx.globalAlpha = 1;
+    });
+
+    // Draw result label
+    crackCtx.font = 'bold 13px Montserrat, Inter';
+    crackCtx.textAlign = 'center';
+    if (demoMode === 'nano') {
+      crackCtx.fillStyle = 'rgba(20,184,166,0.9)';
+      crackCtx.fillText('✓ Проникает в трещину', crackCanvas.width*0.5, crackCanvas.height - 34);
+    } else {
+      crackCtx.fillStyle = 'rgba(239,68,68,0.9)';
+      crackCtx.fillText('✗ Слишком большой — не проникает', crackCanvas.width*0.5, crackCanvas.height - 34);
+    }
+  }
+  animate();
+}
+
+function setMode(mode) {
+  demoMode = mode;
+  document.getElementById('btn-nanocem').classList.toggle('active', mode === 'nano');
+  document.getElementById('btn-portland').classList.toggle('active', mode === 'portland');
+  // Mechanism highlight
+  ['m1','m2','m3','m4'].forEach((id, i) => {
+    document.getElementById(id).classList.toggle('active', i === 0 && mode === 'nano' || i === 1 && mode === 'portland');
+  });
+  cancelAnimationFrame(demoAnim);
+  demoParticles = [];
+  drawCrack();
+  spawnParticles();
+}
+
+window.setMode = setMode;
+window.addEventListener('load', () => { initCrackDemo(); });
+window.addEventListener('resize', () => { initCrackDemo(); });
+</script>
+</body>
+</html>
