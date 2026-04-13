@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NanoCem UT-9 — Динамика скважины 343</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap');
+  
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  
+  body {
+    background: #0D1B2A;
+    color: #F8FAFC;
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+  }
+
+  .header {
+    background: linear-gradient(135deg, #0D1B2A 0%, #1B2E44 100%);
+    border-bottom: 2px solid #0D9488;
+    padding: 28px 40px 20px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .header::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 6px;
+    background: #0D9488;
+  }
+
+  .header-label {
+    font-size: 11px;
+    color: #0D9488;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 8px;
+    padding-left: 16px;
+  }
+
+  .header-title {
+    font-size: 36px;
+    font-weight: 900;
+    color: #F8FAFC;
+    padding-left: 16px;
+    line-height: 1.1;
+  }
+
+  .header-title span { color: #0D9488; }
+
+  .header-sub {
+    font-size: 14px;
+    color: #64748B;
+    padding-left: 16px;
+    margin-top: 6px;
+  }
+
+  .kpi-row {
+    display: flex;
+    gap: 16px;
+    padding: 20px 40px;
+    background: #0D1B2A;
+  }
+
+  .kpi-card {
+    flex: 1;
+    background: #1B2E44;
+    border-radius: 12px;
+    padding: 16px 20px;
+    border: 1px solid #263D5A;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .kpi-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+  }
+
+  .kpi-card.teal::before { background: #0D9488; }
+  .kpi-card.green::before { background: #22C55E; }
+  .kpi-card.orange::before { background: #F97316; }
+  .kpi-card.red::before { background: #EF4444; }
+
+  .kpi-val {
+    font-size: 38px;
+    font-weight: 900;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .kpi-card.teal .kpi-val { color: #0D9488; }
+  .kpi-card.green .kpi-val { color: #22C55E; }
+  .kpi-card.orange .kpi-val { color: #F97316; }
+  .kpi-card.red .kpi-val { color: #EF4444; }
+
+  .kpi-label { font-size: 11px; color: #64748B; line-height: 1.4; }
+
+  .charts-section {
+    padding: 0 40px 30px;
+  }
+
+  .section-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #0D9488;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin: 24px 0 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #263D5A;
+  }
+
+  .chart-container {
+    background: #1B2E44;
+    border-radius: 16px;
+    padding: 24px;
+    border: 1px solid #263D5A;
+    margin-bottom: 20px;
+    position: relative;
+  }
+
+  .chart-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #F8FAFC;
+    margin-bottom: 4px;
+  }
+
+  .chart-subtitle {
+    font-size: 11px;
+    color: #64748B;
+    margin-bottom: 20px;
+  }
+
+  .chart-wrap {
+    position: relative;
+    height: 320px;
+  }
+
+  .chart-wrap-small {
+    position: relative;
+    height: 240px;
+  }
+
+  .legend-row {
+    display: flex;
+    gap: 20px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: #94A3B8;
+  }
+
+  .legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
+  .legend-line {
+    width: 20px;
+    height: 3px;
+    border-radius: 2px;
+  }
+
+  .annotation {
+    position: absolute;
+    background: rgba(13, 148, 136, 0.15);
+    border: 1px solid #0D9488;
+    border-radius: 6px;
+    padding: 4px 8px;
+    font-size: 10px;
+    color: #0D9488;
+    font-weight: 600;
+    pointer-events: none;
+  }
+
+  .phase-label {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 700;
+    margin-right: 8px;
+    letter-spacing: 0.5px;
+  }
+
+  .phase-before { background: rgba(249,115,22,0.2); color: #F97316; border: 1px solid #F97316; }
+  .phase-krs { background: rgba(239,68,68,0.2); color: #EF4444; border: 1px solid #EF4444; }
+  .phase-after { background: rgba(34,197,94,0.2); color: #22C55E; border: 1px solid #22C55E; }
+
+  .phases-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .info-box {
+    background: rgba(13, 148, 136, 0.08);
+    border: 1px solid rgba(13, 148, 136, 0.3);
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin-bottom: 20px;
+    font-size: 12px;
+    color: #94A3B8;
+    line-height: 1.6;
+  }
+
+  .info-box strong { color: #0D9488; }
+
+  .warn-box {
+    background: rgba(249,115,22,0.08);
+    border: 1px solid rgba(249,115,22,0.3);
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin-bottom: 20px;
+    font-size: 12px;
+    color: #94A3B8;
+    line-height: 1.6;
+  }
+
+  .warn-box strong { color: #F97316; }
+
+  .footer {
+    text-align: center;
+    padding: 20px;
+    font-size: 11px;
+    color: #334155;
+    border-top: 1px solid #1B2E44;
+  }
+
+  canvas { max-width: 100%; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-label">Месторождение Каратюбе • Скважина 343</div>
+  <div class="header-title"><span>NanoCem UT-9</span> — Результаты РИР</div>
+  <div class="header-sub">Ультрадисперсный тампонажный цемент | 15.01.2026 — 08.04.2026</div>
+</div>
+
+<div class="kpi-row">
+  <div class="kpi-card teal">
+    <div class="kpi-val">×5,5</div>
+    <div class="kpi-label">Рост дебита нефти<br>2,6 → 14,4 т/сут</div>
+  </div>
+  <div class="kpi-card green">
+    <div class="kpi-val">16,4</div>
+    <div class="kpi-label">Пиковый дебит, т/сут<br>19.03.2026</div>
+  </div>
+  <div class="kpi-card orange">
+    <div class="kpi-val">−55 п.п.</div>
+    <div class="kpi-label">Снижение обводнённости<br>89,4% → 27,5% (пик)</div>
+  </div>
+  <div class="kpi-card red">
+    <div class="kpi-val">44 дня</div>
+    <div class="kpi-label">Нарастающий эффект<br>03.02 → 19.03.2026</div>
+  </div>
+</div>
+
+<div class="charts-section">
+
+  <div class="section-title">График 1 — Дебит нефти и обводнённость</div>
+
+  <div class="phases-row">
+    <span class="phase-label phase-before">● ДО РИР: 2,6 т/сут | 85%</span>
+    <span class="phase-label phase-krs">● КРС / NanoCem</span>
+    <span class="phase-label phase-after">● ПОСЛЕ РИР: до 16,4 т/сут | 27,5%</span>
+  </div>
+
+  <div class="chart-container">
+    <div class="chart-title">Дебит нефти (Qн, т/сут) и Обводнённость (%)</div>
+    <div class="chart-subtitle">Скважина 343 | Серая зона = период КРС и РИР</div>
+    <div class="chart-wrap">
+      <canvas id="mainChart"></canvas>
+    </div>
+    <div class="legend-row">
+      <div class="legend-item"><div class="legend-line" style="background:#0D9488"></div> Дебит нефти, т/сут (левая ось)</div>
+      <div class="legend-item"><div class="legend-line" style="background:#EF4444"></div> Обводнённость, % (правая ось)</div>
+      <div class="legend-item"><div class="legend-line" style="background:rgba(100,116,139,0.3); width:16px"></div> Период КРС</div>
+      <div class="legend-item"><div class="legend-line" style="background:#F97316; height:2px; border-top:2px dashed #F97316"></div> Увеличение оборотов (16.03)</div>
+    </div>
+  </div>
+
+  <div class="info-box">
+    <strong>📊 Ключевые наблюдения:</strong> После запуска скважины (03.02) обводнённость упала с 83% до 38,4% уже к 19.02 — всего за 16 дней. К 19.03 достигнут минимум: <strong>27,5%</strong> при дебите <strong>16,4 т/сут</strong>. Нарастание эффекта NanoCem продолжалось 44 дня подряд без единого ухудшения.
+  </div>
+
+  <div class="section-title">График 2 — Этапы восстановления дебита</div>
+
+  <div class="chart-container">
+    <div class="chart-title">Поэтапный рост дебита нефти после РИР</div>
+    <div class="chart-subtitle">Прирост в процентах от базового дебита (2,6 т/сут до РИР)</div>
+    <div class="chart-wrap-small">
+      <canvas id="growthChart"></canvas>
+    </div>
+  </div>
+
+  <div class="section-title">График 3 — Снижение обводнённости по этапам</div>
+
+  <div class="chart-container">
+    <div class="chart-title">Снижение обводнённости (%) — ключевые точки</div>
+    <div class="chart-subtitle">Столбики: обводнённость на контрольных датах. Цель — ниже 50%</div>
+    <div class="chart-wrap-small">
+      <canvas id="watercutChart"></canvas>
+    </div>
+  </div>
+
+  <div class="warn-box">
+    <strong>⚠️ Эффект форсирования (16.03 — увеличение оборотов до 140 об/мин):</strong><br>
+    Краткосрочно дало прирост дебита до 16,4 т/сут (пик 19.03). Однако рост депрессии на пласт запустил <strong>конусообразование воды</strong> и <strong>прорыв по высокопроницаемым пропласткам</strong>. К 08.04 обводнённость вернулась к 38%, дебит снизился до 14,4 т/сут. Рекомендуемые обороты: <strong>120–125 об/мин</strong>.
+  </div>
+
+  <div class="section-title">График 4 — Сравнение ДО и ПОСЛЕ</div>
+
+  <div class="chart-container">
+    <div class="chart-title">Ключевые показатели: ДО РИР vs ПОСЛЕ РИР</div>
+    <div class="chart-subtitle">Синий = до РИР (28.01) | Бирюзовый = пик (19.03) | Зелёный = стабильный (08.04)</div>
+    <div class="chart-wrap-small">
+      <canvas id="compareChart"></canvas>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  NanoCem UT-9 | ТОО «ЭкоМикс» | Скважина 343, м/р Каратюбе | Данные: суточные режимные листы ИК Petroleum
+</div>
+
+<script>
+// ── DATA ───────────────────────────────────────────────────────
+const labels = [
+  '15.01','16.01','17.01','18.01','19.01','20.01',
+  '21.01','22.01','23.01','24.01','25.01','26.01',
+  '27.01','28.01',
+  // КРС gap — represented as null
+  '03.02','04.02','05.02','06.02','07.02','08.02',
+  '09.02','10.02','11.02','12.02','13.02','14.02',
+  '15.02','16.02','17.02','18.02','19.02','20.02','21.02','22.02',
+  '23.02','24.02','25.02','26.02','27.02','28.02',
+  '01.03','02.03','03.03',
+  '05.03','06.03','07.03','08.03','09.03','10.03',
+  '11.03','12.03','13.03','14.03','15.03','16.03',
+  '17.03','18.03','19.03','20.03','21.03','22.03',
+  '23.03','24.03','25.03','26.03','27.03','28.03',
+  '29.03','30.03','31.03',
+  '01.04','02.04','03.04','04.04','05.04','06.04','07.04','08.04'
+];
+
+const qn = [
+  2.6,2.6,2.6,2.6,2.6,2.6,
+  2.3,2.3,2.3,2.3,2.6,2.6,
+  1.7,1.1,
+  2.1,6.2,6.2,6.5,6.5,6.6,
+  6.6,7.0,6.9,6.9,6.9,6.9,
+  6.9,6.9,6.9,6.9,11.5,11.5,11.5,11.5,
+  12.3,13.3,13.3,13.3,13.3,13.3,
+  13.3,13.3,13.9,
+  14.0,14.0,14.0,14.1,14.1,14.3,
+  14.3,14.3,14.3,14.3,14.3,14.9,
+  15.6,15.9,16.4,16.3,16.0,16.0,
+  16.0,16.0,16.0,16.0,15.6,15.3,
+  15.3,14.9,14.9,
+  14.2,14.2,14.3,14.3,14.3,14.3,14.4,14.4
+];
+
+const obv = [
+  85.4,85.4,85.4,85.4,85.4,85.4,
+  86.0,86.0,86.0,86.5,84.0,84.0,
+  89.4,89.4,
+  83.0,66.8,66.7,65.0,64.7,64.7,
+  64.7,62.8,62.8,62.8,62.8,62.8,
+  62.9,62.9,62.9,62.9,38.4,38.4,38.4,38.4,
+  34.5,34.5,34.5,34.5,34.5,35.6,
+  35.6,35.6,35.0,
+  35.1,35.1,35.1,35.1,35.1,35.0,
+  35.0,35.0,34.9,34.9,34.9,33.2,
+  31.9,29.8,27.5,27.5,27.5,27.5,
+  27.5,27.5,28.4,28.4,30.2,32.0,
+  32.0,34.0,34.0,
+  35.7,36.0,36.0,37.2,37.2,37.2,38.0,38.0
+];
+
+// KRS zone: indices 13–14 (28.01 → 03.02 gap)
+// We'll draw annotation manually
+
+const C = {
+  teal: '#0D9488',
+  red: '#EF4444',
+  orange: '#F97316',
+  green: '#22C55E',
+  navy: '#1B2E44',
+  grey: '#64748B',
+};
+
+Chart.defaults.color = '#94A3B8';
+Chart.defaults.font.family = "'Inter', sans-serif";
+Chart.defaults.font.size = 11;
+
+// ── CHART 1: Main dual-axis ────────────────────────────────────
+const ctx1 = document.getElementById('mainChart').getContext('2d');
+
+// KRS zone plugin
+const krsZone = {
+  id: 'krsZone',
+  beforeDraw(chart) {
+    const { ctx, chartArea, scales } = chart;
+    if (!chartArea) return;
+    // Find x positions for index 13 (28.01) and 14 (03.02)
+    const x1 = scales.x.getPixelForValue(13);
+    const x2 = scales.x.getPixelForValue(14);
+    ctx.save();
+    ctx.fillStyle = 'rgba(100, 116, 139, 0.15)';
+    ctx.fillRect(x1, chartArea.top, x2 - x1, chartArea.bottom - chartArea.top);
+    ctx.restore();
+    // Vertical line for oboroty increase (index at 16.03 = index 55)
+    const xOb = scales.x.getPixelForValue(55);
+    ctx.save();
+    ctx.strokeStyle = C.orange;
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([4, 3]);
+    ctx.beginPath();
+    ctx.moveTo(xOb, chartArea.top);
+    ctx.lineTo(xOb, chartArea.bottom);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.restore();
+  }
+};
+
+new Chart(ctx1, {
+  type: 'line',
+  plugins: [krsZone],
+  data: {
+    labels,
+    datasets: [
+      {
+        label: 'Дебит нефти, т/сут',
+        data: qn,
+        borderColor: C.teal,
+        backgroundColor: 'rgba(13,148,136,0.08)',
+        borderWidth: 2.5,
+        pointRadius: (ctx) => {
+          const i = ctx.dataIndex;
+          // Highlight peak
+          if (i === 58) return 8;
+          // Highlight key events
+          if ([13,14,30,44,55,58].includes(i)) return 5;
+          return 2;
+        },
+        pointBackgroundColor: (ctx) => {
+          const i = ctx.dataIndex;
+          if (i === 58) return C.green;
+          if (i === 13) return C.red;
+          return C.teal;
+        },
+        pointBorderColor: (ctx) => {
+          const i = ctx.dataIndex;
+          if (i === 58) return '#fff';
+          return 'transparent';
+        },
+        pointBorderWidth: 2,
+        fill: true,
+        tension: 0.3,
+        yAxisID: 'y',
+      },
+      {
+        label: 'Обводнённость, %',
+        data: obv,
+        borderColor: C.red,
+        backgroundColor: 'rgba(239,68,68,0.05)',
+        borderWidth: 2,
+        pointRadius: (ctx) => {
+          const i = ctx.dataIndex;
+          if (i === 58) return 8;
+          if ([13,14,30].includes(i)) return 5;
+          return 1.5;
+        },
+        pointBackgroundColor: C.red,
+        fill: false,
+        tension: 0.3,
+        yAxisID: 'y1',
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    interaction: { mode: 'index', intersect: false },
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: '#0D1B2A',
+        borderColor: '#263D5A',
+        borderWidth: 1,
+        callbacks: {
+          label: (ctx) => {
+            if (ctx.datasetIndex === 0) return ` Qн: ${ctx.raw} т/сут`;
+            return ` Обв.: ${ctx.raw}%`;
+          }
+        }
+      }
+    },
+    scales: {
+      x: {
+        grid: { color: 'rgba(38,61,90,0.5)', drawTicks: false },
+        ticks: {
+          maxTicksLimit: 20,
+          maxRotation: 45,
+          font: { size: 9 }
+        }
+      },
+      y: {
+        position: 'left',
+        min: 0, max: 19,
+        title: { display: true, text: 'Qн, т/сут', color: C.teal, font: { size: 11 } },
+        grid: { color: 'rgba(38,61,90,0.4)' },
+        ticks: { color: C.teal }
+      },
+      y1: {
+        position: 'right',
+        min: 0, max: 100,
+        title: { display: true, text: 'Обв., %', color: C.red, font: { size: 11 } },
+        grid: { display: false },
+        ticks: { color: C.red }
+      }
+    }
+  }
+});
+
+// ── CHART 2: Growth stages bar ─────────────────────────────────
+const ctx2 = document.getElementById('growthChart').getContext('2d');
+new Chart(ctx2, {
+  type: 'bar',
+  data: {
+    labels: ['28.01\n(до РИР)', '03.02\nзапуск', '04.02\nперевод', '19.02\nскачок', '24.02\nрост', '19.03\nпик', '08.04\nстаб.'],
+    datasets: [{
+      label: 'Qн, т/сут',
+      data: [1.1, 2.1, 6.2, 11.5, 13.3, 16.4, 14.4],
+      backgroundColor: [
+        'rgba(239,68,68,0.7)',
+        'rgba(249,115,22,0.7)',
+        'rgba(234,179,8,0.7)',
+        'rgba(34,197,94,0.7)',
+        'rgba(13,148,136,0.7)',
+        'rgba(13,148,136,1)',
+        'rgba(96,165,250,0.7)',
+      ],
+      borderColor: [
+        C.red, C.orange, '#EAB308', C.green, C.teal, C.teal, '#60A5FA'
+      ],
+      borderWidth: 1.5,
+      borderRadius: 6,
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: '#0D1B2A',
+        borderColor: '#263D5A',
+        borderWidth: 1,
+        callbacks: {
+          label: (ctx) => ` Дебит: ${ctx.raw} т/сут`,
+          afterLabel: (ctx) => {
+            const base = 2.6;
+            const pct = Math.round(((ctx.raw - base) / base) * 100);
+            return pct > 0 ? ` Прирост от базы: +${pct}%` : '';
+          }
+        }
+      }
+    },
+    scales: {
+      x: { grid: { display: false } },
+      y: {
+        min: 0, max: 18,
+        grid: { color: 'rgba(38,61,90,0.4)' },
+        ticks: { stepSize: 2 },
+        title: { display: true, text: 'т/сут' }
+      }
+    }
+  }
+});
+
+// ── CHART 3: Watercut stages ───────────────────────────────────
+const ctx3 = document.getElementById('watercutChart').getContext('2d');
+new Chart(ctx3, {
+  type: 'bar',
+  data: {
+    labels: ['28.01\nдо РИР', '03.02\nзапуск', '04.02\nперевод', '19.02\nскачок', '24.02', '03.03', '19.03\nПИК', '08.04\nстаб.'],
+    datasets: [{
+      label: 'Обводнённость, %',
+      data: [89.4, 83.0, 66.8, 38.4, 34.5, 35.0, 27.5, 38.0],
+      backgroundColor: [
+        'rgba(239,68,68,0.8)',
+        'rgba(239,68,68,0.6)',
+        'rgba(249,115,22,0.7)',
+        'rgba(234,179,8,0.7)',
+        'rgba(34,197,94,0.6)',
+        'rgba(34,197,94,0.6)',
+        'rgba(13,148,136,1)',
+        'rgba(96,165,250,0.7)',
+      ],
+      borderColor: [C.red,C.red,C.orange,'#EAB308',C.green,C.green,C.teal,'#60A5FA'],
+      borderWidth: 1.5,
+      borderRadius: 6,
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: '#0D1B2A',
+        borderColor: '#263D5A',
+        borderWidth: 1,
+        callbacks: { label: (ctx) => ` Обв.: ${ctx.raw}%` }
+      }
+    },
+    scales: {
+      x: { grid: { display: false } },
+      y: {
+        min: 0, max: 100,
+        grid: { color: 'rgba(38,61,90,0.4)' },
+        title: { display: true, text: '%' }
+      }
+    }
+  }
+});
+
+// ── CHART 4: Before/After compare ─────────────────────────────
+const ctx4 = document.getElementById('compareChart').getContext('2d');
+new Chart(ctx4, {
+  type: 'bar',
+  data: {
+    labels: ['Дебит нефти\n(т/сут)', 'Обводнённость\n(%)'],
+    datasets: [
+      {
+        label: 'До РИР (28.01)',
+        data: [1.1, 89.4],
+        backgroundColor: 'rgba(239,68,68,0.7)',
+        borderColor: C.red,
+        borderWidth: 1.5,
+        borderRadius: 6,
+      },
+      {
+        label: 'Пик (19.03)',
+        data: [16.4, 27.5],
+        backgroundColor: 'rgba(13,148,136,0.9)',
+        borderColor: C.teal,
+        borderWidth: 1.5,
+        borderRadius: 6,
+      },
+      {
+        label: 'Стабильный (08.04)',
+        data: [14.4, 38.0],
+        backgroundColor: 'rgba(34,197,94,0.7)',
+        borderColor: C.green,
+        borderWidth: 1.5,
+        borderRadius: 6,
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: true,
+        position: 'top',
+        labels: { boxWidth: 12, font: { size: 11 } }
+      },
+      tooltip: {
+        backgroundColor: '#0D1B2A',
+        borderColor: '#263D5A',
+        borderWidth: 1,
+      }
+    },
+    scales: {
+      x: { grid: { display: false } },
+      y: {
+        min: 0, max: 100,
+        grid: { color: 'rgba(38,61,90,0.4)' }
+      }
+    }
+  }
+});
+</script>
+</body>
+</html>

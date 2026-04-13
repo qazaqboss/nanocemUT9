@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NanoCem UT-9 | Скважина 343 | Каратюбе 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg:#0D1B2A; --bg2:#1B2E44; --bg3:#263D5A;
+  --teal:#0D9488; --teal2:#14B8A6;
+  --red:#EF4444; --orange:#F97316; --green:#22C55E;
+  --text:#FFFFFF; --text2:#94A3B8; --text3:#64748B;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:'Inter',sans-serif}
+
+/* PROGRESS */
+#progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--teal),var(--teal2));transition:width .4s;z-index:999}
+
+/* SLIDES */
+#deck{position:relative;width:100%;height:100vh;overflow:hidden}
+.slide{position:absolute;inset:0;display:flex;flex-direction:column;opacity:0;pointer-events:none;transition:opacity .5s,transform .5s;transform:translateX(50px)}
+.slide.active{opacity:1;pointer-events:all;transform:translateX(0)}
+.slide.exit{opacity:0;transform:translateX(-50px)}
+.slide-body{flex:1;overflow-y:auto;padding:32px 56px 96px;scrollbar-width:thin;scrollbar-color:var(--bg3) transparent}
+
+/* HEADER */
+.sh{display:flex;align-items:center;justify-content:space-between;padding:14px 56px;background:var(--bg2);border-bottom:2px solid var(--teal);flex-shrink:0}
+.sh-logo{height:28px;background:#fff;border-radius:6px;padding:4px 10px}
+.sh-label{font-size:11px;color:var(--text3);letter-spacing:2px;text-transform:uppercase;font-weight:600}
+.sh-num{font-size:12px;font-weight:700;color:var(--teal)}
+
+/* TYPOGRAPHY */
+.tag{font-size:10px;letter-spacing:3px;text-transform:uppercase;font-weight:700;color:var(--teal);margin-bottom:6px}
+h2{font-family:'Montserrat',sans-serif;font-size:34px;font-weight:900;line-height:1.1;margin-bottom:4px}
+h3{font-size:18px;font-weight:700;color:var(--text);margin-bottom:12px}
+.sub{font-size:14px;color:var(--text2);margin-bottom:24px}
+
+/* GRID */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+
+/* CARD */
+.card{background:var(--bg2);border:1px solid var(--bg3);border-radius:12px;padding:20px 22px}
+.card-teal{border-top:3px solid var(--teal)}
+.card-green{border-top:3px solid var(--green)}
+.card-red{border-top:3px solid var(--red)}
+.card-orange{border-top:3px solid var(--orange)}
+
+/* KPI */
+.kpi-val{font-family:'Montserrat',sans-serif;font-size:48px;font-weight:900;line-height:1}
+.kpi-label{font-size:12px;color:var(--text2);line-height:1.5;margin-top:6px}
+.c-teal{color:var(--teal)} .c-green{color:var(--green)} .c-red{color:var(--red)} .c-orange{color:var(--orange)}
+
+/* BOXES */
+.info-box{background:rgba(13,148,136,.08);border-left:3px solid var(--teal);border-radius:0 8px 8px 0;padding:14px 18px;font-size:13px;color:var(--text2);line-height:1.7;margin:14px 0}
+.info-box strong{color:var(--teal)}
+.warn-box{background:rgba(249,115,22,.08);border-left:3px solid var(--orange);border-radius:0 8px 8px 0;padding:14px 18px;font-size:13px;color:var(--text2);line-height:1.7;margin:14px 0}
+.warn-box strong{color:var(--orange)}
+.ok-box{background:rgba(34,197,94,.08);border-left:3px solid var(--green);border-radius:0 8px 8px 0;padding:14px 18px;font-size:13px;color:var(--text2);line-height:1.7;margin:14px 0}
+.ok-box strong{color:var(--green)}
+
+/* TABLE */
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead th{background:rgba(13,148,136,.15);color:var(--teal2);font-weight:700;padding:9px 12px;text-align:left;border-bottom:2px solid var(--teal);font-size:10px;letter-spacing:.5px;text-transform:uppercase}
+tbody tr{border-bottom:1px solid rgba(38,61,90,.5)}
+tbody tr:hover{background:rgba(13,148,136,.04)}
+tbody td{padding:8px 12px;color:var(--text2)}
+tbody td:first-child{color:var(--text);font-weight:500}
+tr.hi-green td{color:var(--green)!important;font-weight:700}
+tr.hi-red td{color:var(--red)!important;font-weight:700}
+tr.hi-orange td{color:var(--orange)!important;font-style:italic;background:rgba(249,115,22,.06)}
+
+/* CHART BOX */
+.ch-box{background:var(--bg2);border:1px solid var(--bg3);border-radius:12px;padding:20px 22px;margin-bottom:16px}
+.ch-title{font-size:14px;font-weight:700;margin-bottom:2px}
+.ch-sub{font-size:11px;color:var(--text3);margin-bottom:16px}
+.ch-wrap{position:relative}
+
+/* TIMELINE */
+.timeline{display:flex;position:relative;margin:28px 0}
+.timeline::before{content:'';position:absolute;top:24px;left:24px;right:24px;height:2px;background:linear-gradient(90deg,var(--red),var(--orange),#EAB308,var(--teal),var(--green))}
+.tl-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:10px}
+.tl-dot{width:48px;height:48px;border-radius:50%;border:3px solid;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:18px;position:relative;z-index:1}
+.tl-1{background:rgba(239,68,68,.2);border-color:var(--red);color:var(--red)}
+.tl-2{background:rgba(249,115,22,.2);border-color:var(--orange);color:var(--orange)}
+.tl-3{background:rgba(234,179,8,.2);border-color:#EAB308;color:#EAB308}
+.tl-4{background:rgba(13,148,136,.2);border-color:var(--teal);color:var(--teal)}
+.tl-5{background:rgba(34,197,94,.2);border-color:var(--green);color:var(--green)}
+.tl-body{text-align:center;padding:0 6px}
+.tl-date{font-size:10px;font-weight:700;color:var(--text3);margin-bottom:3px}
+.tl-title{font-size:12px;font-weight:700;color:var(--text);margin-bottom:3px}
+.tl-desc{font-size:10px;color:var(--text2);line-height:1.4}
+
+/* CHECK */
+.check{display:flex;gap:12px;align-items:flex-start;padding:12px 16px;background:var(--bg2);border-radius:10px;border:1px solid var(--bg3);margin-bottom:8px}
+.check-ico{width:26px;height:26px;border-radius:50%;background:rgba(34,197,94,.2);border:2px solid var(--green);display:flex;align-items:center;justify-content:center;color:var(--green);font-size:13px;flex-shrink:0;margin-top:2px}
+.check-txt strong{display:block;color:var(--text);font-size:14px;font-weight:700;margin-bottom:3px}
+.check-txt span{font-size:12px;color:var(--text2);line-height:1.5}
+
+/* ─── BAG ─── */
+.bag-scene{perspective:900px;display:flex;justify-content:center;align-items:center}
+.bag-3d{transform-style:preserve-3d;position:relative;width:280px;height:380px;transform:rotateY(-15deg) rotateX(3deg);transition:transform .6s}
+.bag-3d:hover{transform:rotateY(0deg) rotateX(0deg)}
+.bag-face{position:absolute;border-radius:8px;overflow:hidden}
+.bag-front-face{width:280px;height:380px;background:linear-gradient(160deg,#1a1a1a 0%,#0a0a0a 100%);border:1px solid #333;display:flex;flex-direction:column;padding:20px 18px;left:0;top:0}
+.bag-side-face{width:60px;height:380px;background:linear-gradient(180deg,#111 0%,#222 100%);border:1px solid #333;transform-origin:left center;transform:rotateY(90deg) translateX(-30px);left:280px;top:0;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.bag-side-text-v{writing-mode:vertical-lr;text-orientation:mixed;transform:rotate(180deg);font-size:7px;color:#555;letter-spacing:1px;text-transform:uppercase;font-weight:600;white-space:nowrap}
+.bag-brand-row{display:flex;align-items:center;gap:8px;border-bottom:1px solid #333;padding-bottom:12px;margin-bottom:14px}
+.bag-logo-white{height:22px;filter:brightness(0) invert(1)}
+.bag-diamonds-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;width:100px;margin:0 auto 14px}
+.bag-diamond{width:44px;height:44px;background:#fff;transform:rotate(45deg);border-radius:2px}
+.bag-diamond.dark{background:#333}
+.bag-product-name-big{text-align:left;flex:1}
+.bag-nano-text{font-family:'Montserrat',sans-serif;font-size:28px;font-weight:900;color:#fff;line-height:1;letter-spacing:-1px}
+.bag-ut-text{font-family:'Montserrat',sans-serif;font-size:52px;font-weight:900;color:var(--teal);line-height:1;letter-spacing:-2px}
+.bag-desc-text{font-size:8px;color:#666;letter-spacing:1px;text-transform:uppercase;line-height:1.5;margin-top:4px}
+.bag-center-row{display:flex;gap:16px;align-items:flex-start;flex:1}
+.bag-bottom-bar{border-top:1px solid #333;padding-top:12px;display:flex;justify-content:space-between;align-items:center}
+.bag-weight-big{font-family:'Montserrat',sans-serif;font-size:22px;font-weight:900;color:#fff}
+.bag-maker-text{font-size:7px;color:#555;text-align:right;line-height:1.4}
+.bag-pro-badge{background:var(--teal);color:#fff;font-size:7px;font-weight:700;letter-spacing:1px;padding:2px 6px;border-radius:2px;text-transform:uppercase;margin-bottom:4px;display:inline-block}
+
+/* CONTROLS */
+#ctrl{position:fixed;bottom:0;left:0;right:0;padding:10px 40px;background:rgba(13,27,42,.96);backdrop-filter:blur(12px);border-top:1px solid var(--bg3);display:flex;align-items:center;justify-content:space-between;z-index:100}
+.ctrl-nav{display:flex;align-items:center;gap:12px}
+.btn{background:var(--bg2);border:1px solid var(--bg3);color:var(--text);padding:7px 18px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;transition:all .2s;font-family:'Inter',sans-serif;display:flex;align-items:center;gap:6px}
+.btn:hover{background:var(--bg3);border-color:var(--teal)}
+.btn:disabled{opacity:.3;cursor:default}
+.btn-dl{background:linear-gradient(135deg,var(--teal),#0a7a70);border-color:var(--teal)}
+.btn-dl:hover{background:linear-gradient(135deg,var(--teal2),var(--teal))}
+#counter{font-size:13px;font-weight:700;color:var(--text2);min-width:52px;text-align:center}
+.dots{display:flex;gap:5px;align-items:center}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--bg3);border:none;cursor:pointer;transition:all .2s;padding:0}
+.dot.on{background:var(--teal);width:18px;border-radius:3px}
+
+/* PRINT */
+@media print{
+  html,body{overflow:visible!important;height:auto!important}
+  #ctrl,#progress{display:none!important}
+  #deck{overflow:visible!important;height:auto!important;position:static!important}
+  .slide{position:relative!important;opacity:1!important;transform:none!important;pointer-events:all!important;height:100vh!important;page-break-after:always;break-after:page;overflow:hidden!important}
+  .slide-body{overflow:visible!important;padding-bottom:20px!important}
+}
+
+/* COVER */
+#s1{background:radial-gradient(ellipse at 15% 60%,rgba(13,148,136,.15) 0%,transparent 50%),radial-gradient(ellipse at 85% 10%,rgba(27,46,68,.9) 0%,transparent 50%),var(--bg)}
+.cover-inner{padding:44px 60px 100px;height:100%;display:flex;flex-direction:column;justify-content:space-between;position:relative;z-index:1}
+.cover-dots{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.cover-dots::before{content:'';position:absolute;width:500px;height:500px;border-radius:50%;border:1px solid rgba(13,148,136,.07);top:-150px;right:-150px}
+.cover-dots::after{content:'';position:absolute;width:300px;height:300px;border-radius:50%;border:1px solid rgba(13,148,136,.05);bottom:60px;left:-60px}
+.cover-logo-row{display:flex;align-items:center;gap:16px}
+.cover-logo{height:34px;background:#fff;border-radius:7px;padding:5px 12px}
+.cover-tagline{font-size:11px;color:var(--text3);letter-spacing:2px;text-transform:uppercase;font-weight:600}
+.cover-main{flex:1;display:flex;flex-direction:column;justify-content:center}
+.cover-pretitle{font-size:11px;color:var(--teal);letter-spacing:4px;text-transform:uppercase;font-weight:700;margin-bottom:12px}
+.cover-title{font-family:'Montserrat',sans-serif;font-size:80px;font-weight:900;line-height:.95;color:#fff;margin-bottom:8px}
+.cover-title .accent{color:var(--teal)}
+.cover-subtitle{font-size:18px;color:var(--text2);margin-bottom:6px}
+.cover-meta{font-size:13px;color:var(--text3);letter-spacing:1px}
+.cover-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.ck{background:rgba(27,46,68,.8);border:1px solid var(--bg3);border-radius:14px;padding:20px 22px;position:relative;overflow:hidden;backdrop-filter:blur(8px)}
+.ck::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.ck.t::before{background:linear-gradient(90deg,var(--teal),var(--teal2))}
+.ck.g::before{background:var(--green)}
+.ck.r::before{background:var(--red)}
+.ck-val{font-family:'Montserrat',sans-serif;font-size:46px;font-weight:900;line-height:1}
+.ck.t .ck-val{color:var(--teal)}
+.ck.g .ck-val{color:var(--green)}
+.ck.r .ck-val{color:var(--red)}
+.ck-lbl{font-size:12px;color:var(--text2);line-height:1.4;margin-top:6px}
+
+/* PRODUCT / BAG PAGE */
+.product-layout{display:grid;grid-template-columns:300px 1fr;gap:32px;align-items:start}
+.specs-table{width:100%;border-collapse:collapse;font-size:12px}
+.specs-table tr{border-bottom:1px solid rgba(38,61,90,.5)}
+.specs-table tr:hover{background:rgba(13,148,136,.04)}
+.specs-table td{padding:8px 10px;color:var(--text2)}
+.specs-table td:first-child{color:var(--teal2);font-weight:600;width:45%;font-size:11px}
+.specs-table td:last-child{color:var(--text);font-weight:500}
+
+/* WATER CONE SVG */
+.wc-svg text{font-family:'Inter',sans-serif;fill:var(--text2);font-size:11px}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+
+<div id="deck">
+
+<!-- ══════════════════════════════════════════════════
+     SLIDE 1 — COVER
+══════════════════════════════════════════════════ -->
+<section class="slide active" id="s1">
+  <div class="cover-dots"></div>
+  <div class="cover-inner">
+    <div class="cover-logo-row">
+      <img src="LOGO.png" class="cover-logo" alt="EASYMIX">
+      <span class="cover-tagline">Результаты РИР — Скважина 343 — Каратюбе — 2026</span>
+    </div>
+    <div class="cover-main">
+      <div class="cover-pretitle">Ремонтно-изоляционные работы</div>
+      <div class="cover-title">NanoCem<br><span class="accent">UT-9</span></div>
+      <div class="cover-subtitle">Ультрадисперсный тампонажный цемент</div>
+      <div class="cover-meta">Январь — Апрель 2026 г. &nbsp;|&nbsp; ТОО «ЭкоМикс»</div>
+    </div>
+    <div class="cover-kpis">
+      <div class="ck t"><div class="ck-val">×6,3</div><div class="ck-lbl">Рост дебита нефти<br>2,6 → 16,4 т/сут</div></div>
+      <div class="ck r"><div class="ck-val">−57 п.п.</div><div class="ck-lbl">Снижение обводнённости<br>89,4% → 27,5%</div></div>
+      <div class="ck g"><div class="ck-val">44 дня</div><div class="ck-lbl">Непрерывного улучшения<br>без единого ухудшения</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════
+     SLIDE 2 — PRODUCT & BAG
+══════════════════════════════════════════════════ -->
+<section class="slide" id="s2">
+  <div class="sh"><img src="LOGO.png" class="sh-logo" alt="EASYMIX"><span class="sh-label">Продукт</span><span class="sh-num">02 / 12</span></div>
+  <div class="slide-body">
+    <div class="tag">NanoCem UT-9</div>
+    <h2>Ультрадисперсный<br>тампонажный цемент</h2>
+    <p class="sub">Производитель: ТОО «ЭкоМикс» | Актобе, Казахстан</p>
+
+    <div class="product-layout">
+      <!-- BAG -->
+      <div>
+        <div class="bag-scene">
+          <div class="bag-3d">
+            <div class="bag-face bag-front-face">
+              <div class="bag-brand-row">
+                <img src="LOGO.png" class="bag-logo-white" alt="EASYMIX">
+                <div>
+                  <div style="font-size:7px;color:#888;letter-spacing:2px;text-transform:uppercase">Ультрадисперсный</div>
+                  <div style="font-size:7px;color:#888;letter-spacing:2px;text-transform:uppercase">Цементный порошок</div>
+                </div>
+              </div>
+              <div class="bag-center-row">
+                <div>
+                  <div class="bag-diamonds-grid">
+                    <div class="bag-diamond"></div>
+                    <div class="bag-diamond dark"></div>
+                    <div class="bag-diamond dark"></div>
+                    <div class="bag-diamond"></div>
+                  </div>
+                  <div style="text-align:center;margin-top:8px">
+                    <div class="bag-pro-badge">Professional</div>
+                    <div style="font-size:7px;color:#555;letter-spacing:1px;text-transform:uppercase;margin-top:4px">EASYMIX.KZ</div>
+                  </div>
+                </div>
+                <div class="bag-product-name-big">
+                  <div class="bag-nano-text">NANOCEM</div>
+                  <div class="bag-ut-text">UT9</div>
+                  <div class="bag-desc-text">ҰҢҒЫМАЛАРҒА АРНАЛҒАН<br>УЛЬТРАЖҰҚА ЦЕМЕНТІ<br>УЛЬТРАТОНКИЙ ЦЕМЕНТ<br>ДЛЯ СКВАЖИН</div>
+                </div>
+              </div>
+              <div class="bag-bottom-bar">
+                <div>
+                  <div class="bag-weight-big">25kg</div>
+                  <div style="font-size:7px;color:#555">Net weight</div>
+                </div>
+                <div style="display:flex;gap:6px;align-items:center">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#555" stroke-width="1.5"/><path d="M12 8v4M12 16h.01" stroke="#F97316" stroke-width="2" stroke-linecap="round"/></svg>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 6h18M3 12h18M3 18h18" stroke="#555" stroke-width="1.5" stroke-linecap="round"/></svg>
+                </div>
+                <div class="bag-maker-text">Сделано в Казахстане<br>ТОО «ЭкоМикс»<br>+7 (707) 539 00 00</div>
+              </div>
+            </div>
+            <div class="bag-face bag-side-face">
+              <div class="bag-side-text-v">NANOCEM UT9 · УЛЬТРАДИСПЕРСНЫЙ ЦЕМЕНТНЫЙ ПОРОШОК · 25KG · EASYMIX · KAZAKHSTAN</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SPECS -->
+      <div>
+        <div class="card" style="margin-bottom:16px">
+          <h3 style="font-size:14px;margin-bottom:14px;color:var(--teal2)">Технические характеристики</h3>
+          <table class="specs-table">
+            <tr><td>Размер частиц (D97)</td><td>&lt; 10 мкм (ультратонкий)</td></tr>
+            <tr><td>Вяжущее</td><td>CEM I 42.5 N (EN 197-1)</td></tr>
+            <tr><td>Марка прочности</td><td>М500 (ГОСТ 31108-2020)</td></tr>
+            <tr><td>Прочность на сжатие</td><td>≥ 12 МПа / 24 ч · ≥ 65 МПа / 28 сут</td></tr>
+            <tr><td>CaO (оксид кальция)</td><td>≥ 63%</td></tr>
+            <tr><td>SiO₂ (кремнезём)</td><td>19–25%</td></tr>
+            <tr><td>Плотность суспензии</td><td>1,85–1,95 г/см³</td></tr>
+            <tr><td>Водосодержание (BWOC)</td><td>80–120%</td></tr>
+            <tr><td>Температурный диапазон</td><td>+5 … +120 °C</td></tr>
+            <tr><td>Морозостойкость</td><td>F75 – F100</td></tr>
+            <tr><td>Водонепроницаемость</td><td>W14 – W16</td></tr>
+            <tr><td>Адгезия к бетону</td><td>≥ 2,5 МПа</td></tr>
+            <tr><td>Срок хранения</td><td>12 мес. (сухое, −40…+40 °C)</td></tr>
+            <tr><td>Фасовка</td><td>25 кг / мешок</td></tr>
+          </table>
+        </div>
+        <div class="ok-box"><strong>Ключевое преимущество:</strong> Частицы &lt;10 мкм проникают в микротрещины пласта (0,01–0,02 мм), куда обычный цемент (D97 &gt;40 мкм) физически не способен попасть. Именно там скрыты водяные каналы обводнения.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════
+     SLIDE 3 — HOW IT WORKS
+══════════════════════════════════════════════════ -->
+<section class="slide" id="s3">
+  <div class="sh"><img src="LOGO.png" class="sh-logo" alt="EASYMIX"><span class="sh-label">Принцип действия</span><span class="sh-num">03 / 12</span></div>
+  <div class="slide-body">
+    <div class="tag">Физика успеха</div>
+    <h2>Как работает NanoCem UT-9</h2>
+    <p class="sub">Ультрадисперсный цемент против водяных каналов пласта</p>
+
+    <div class="g2" style="margin-bottom:20px;align-items:start">
+      <div>
+        <img id="infographic-img" alt="NanoCem Infographic" style="width:100%;border-radius:12px;border:1px solid var(--bg3)">
+      </div>
+      <div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div class="card card-teal">
+            <div style="font-size:28px;font-weight:900;color:var(--teal);margin-bottom:4px">01</div>
+            <div style="font-weight:700;margin-bottom:6px">Ультратонкое проникновение</div>
+            <div style="font-size:13px;color:var(--text2);line-height:1.6">Частицы &lt;10 мкм проходят в микротрещины и поровые каналы, недоступные для стандартного цемента (D97 &gt;40 мкм).</div>
+          </div>
+          <div class="card card-green">
+            <div style="font-size:28px;font-weight:900;color:var(--green);margin-bottom:4px">02</div>
+            <div style="font-weight:700;margin-bottom:6px">Избирательная изоляция</div>
+            <div style="font-size:13px;color:var(--text2);line-height:1.6">Цемент заполняет водонасыщенные зоны высокой проницаемости — именно там вода движется быстрее всего.</div>
+          </div>
+          <div class="card card-orange">
+            <div style="font-size:28px;font-weight:900;color:var(--orange);margin-bottom:4px">03</div>
+            <div style="font-weight:700;margin-bottom:6px">Нарастающий эффект</div>
+            <div style="font-size:13px;color:var(--text2);line-height:1.6">После твердения прочный тампон. Эффект нарастает 45 дней: обводнённость с 83% (03.02) → 27,5% (19.03).</div>
+          </div>
+          <div class="card" style="border-top:3px solid #8B5CF6">
+            <div style="font-size:28px;font-weight:900;color:#8B5CF6;margin-bottom:4px">04</div>
+            <div style="font-weight:700;margin-bottom:6px">Химическая совместимость</div>
+            <div style="font-size:13px;color:var(--text2);line-height:1.6">CaO ≥63%, SiO₂ 19–25% — адгезия к породе и совместимость с пластовыми флюидами Каратюбе.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <img id="gemini-img" alt="Particle comparison" style="width:100%;border-radius:12px;border:1px solid var(--bg3);max-height:180px;object-fit:cover;object-position:center">
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════
+     SLIDE 4 — PROBLEM BEFORE RIR
+══════════════════════════════════════════════════ -->
+<section class="slide" id="s4">
+  <div class="sh"><img src="LOGO.png" class="sh-logo" alt="EASYMIX"><span class="sh-label">Состояние до РИР</span><span class="sh-num">04 / 12</span></div>
+  <div class="slide-body">
+    <div class="tag">Проблема</div>
+    <h2>Скважина 343<br>к январю 2026</h2>
+    <p class="sub">Критическая обводнённость. Скважина работала «в воду».</p>
+
+    <div class="g3" style="margin-bottom:20px">
+      <div class="card card-red">
+        <div style="font-size:40px;margin-bottom:8px">💧</div>
+        <div style="font-size:32px;font-weight:900;color:var(--red);margin-bottom:6px">84–89%</div>
+        <div style="font-weight:700;margin-bottom:4px">Критическая обводнённость</div>
+        <div style="font-size:12px;color:var(--text2);line-height:1.5">Скважина добывала преимущественно воду. Нефть составляла ничтожную долю жидкости.</div>
+      </div>
+      <div class="card card-red">
+        <div style="font-size:40px;margin-bottom:8px">📉</div>
+        <div style="font-size:32px;font-weight:900;color:var(--orange);margin-bottom:6px">1,1 т/сут</div>
+        <div style="font-weight:700;margin-bottom:4px">Падающий дебит</div>
+        <div style="font-size:12px;color:var(--text2);line-height:1.5">С 2,6 т/сут в начале января скважина упала до 1,1 т/сут к 28.01 — предел рентабельности.</div>
+      </div>
+      <div class="card card-red">
+        <div style="font-size:40px;margin-bottom:8px">⚠️</div>
+        <div style="font-size:32px;font-weight:900;color:var(--red);margin-bottom:6px">↓↓↓</div>
+        <div style="font-weight:700;margin-bottom:4px">Тренд ухудшения</div>
+        <div style="font-size:12px;color:var(--text2);line-height:1.5">Устойчивое снижение без признаков стабилизации. Каждую неделю показатели становились хуже.</div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:16px">
+      <h3 style="font-size:14px;margin-bottom:12px">Данные до остановки скважины</h3>
+      <table>
+        <thead><tr><th>Период</th><th>Qн, т/сут</th><th>Обводнённость</th><th>Тренд</th></tr></thead>
+        <tbody>
+          <tr><td>15–20 января</td><td>2,6</td><td>85,4%</td><td style="color:var(--text3)">— базовый уровень</td></tr>
+          <tr><td>21–24 января</td><td>2,3</td><td>86,0–86,5%</td><td style="color:var(--orange)">↗ растёт</td></tr>
+          <tr><td>25–26 января</td><td>2,6</td><td>84,0%</td><td style="color:var(--text3)">≈ стабильно</td></tr>
+          <tr class="hi-red"><td>27 января</td><td>1,7</td><td>89,4%</td><td>↗↗ критично</td></tr>
+          <tr class="hi-red"><td>28 января</td><td>1,1</td><td>89,4%</td><td>⛔ стоп-РИР</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="warn-box"><strong>28 января 2026 г.</strong> — принято решение об остановке скважины на КРС для проведения РИР с применением ультрадисперсного тампонажного цемента NanoCem UT-9.</div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════
+     SLIDE 5 — OPERATION TIMELINE
+══════════════════════════════════════════════════ -->
+<section class="slide" id="s5">
+  <div class="sh"><img src="LOGO.png" class="sh-logo" alt="EASYMIX"><span class="sh-label">Хронология операции</span><span class="sh-num">05 / 12</span></div>
+  <div class="slide-body">
+    <div class="tag">Операция РИР</div>
+    <h2>5 этапов операции</h2>
+    <p class="sub">28 января — 3 февраля 2026 года</p>
+
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-dot tl-1">1</div>
+        <div class="tl-body">
+          <div class="tl-date">28.01.2026</div>
+          <div class="tl-title">ОСТАНОВКА</div>
+          <div class="tl-desc">Плановая остановка на КРС. Дебит: 1,1 т/сут. Обв: 89,4%</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot tl-2">2</div>
+        <div class="tl-body">
+          <div class="tl-date">28.01 – 02.02</div>
+          <div class="tl-title">КРС И ПОДГОТОВКА</div>
+          <div class="tl-desc">5 суток простоя. Подготовка ствола. Закачка NanoCem UT-9. Выдержка.</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot tl-3">3</div>
+        <div class="tl-body">
+          <div class="tl-date">03.02.2026</div>
+          <div class="tl-title">ПЕРВЫЙ ЗАПУСК</div>
+          <div class="tl-desc">Проба №1: 93% воды → Проба №3: 74% — цемент работает, неоднородность уменьшается.</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot tl-4">4</div>
+        <div class="tl-body">
+          <div class="tl-date">04.02.2026</div>
+          <div class="tl-title">ПЕРЕВОД НА ЛИНИЮ</div>
+          <div class="tl-desc">Скачок: 6,2 т/сут | Обв: 66,8%. Первое подтверждение тампонирования.</div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot tl-5">5</div>
+        <div class="tl-body">
+          <div class="tl-date">19.02.2026</div>
+          <div class="tl-title">ПЕРВЫЙ ПРОРЫВ</div>
+          <div class="tl-desc">11,5 т/сут при обводнённости 38,4%. За 16 дней — рост в 5,5 раза.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="g4" style="margin-top:24px">
+      <div class="card card-red" style="text-align:center">
+        <div style="font-size:11px;color:var(--text3);margin-bottom:4px">28.01 — до КРС</div>
+        <div style="font-size:28px;font-weight:900;color:var(--red)">1,1</div>
+        <div style="font-size:10px;color:var(--text3)">т/сут | 89,4% обв.</div>
+      </div>
+      <div class="card card-orange" style="text-align:center">
+        <div style="font-size:11px;color:var(--text3);margin-bottom:4px">04.02 — перевод</div>
+        <div style="font-size:28px;font-weight:900;color:var(--orange)">6,2</div>
+        <div style="font-size:10px;color:var(--text3)">т/сут | 66,8% обв.</div>
+      </div>
+      <div class="card card-teal" style="text-align:center">
+        <div style="font-size:11px;color:var(--text3);margin-bottom:4px">19.02 — прорыв</div>
+        <div style="font-size:28px;font-weight:900;color:var(--teal)">11,5</div>
+        <div style="font-size:10px;color:var(--text3)">т/сут | 38,4% обв.</div>
+      </div>
+      <div class="card card-green" style="text-align:center">
+        <div style="font-size:11px;color:var(--text3);margin-bottom:4px">19.03 — пик</div>
+        <div style="font-size:28px;font-weight:900;color:var(--green)">16,4</div>
+        <div style="font-size:10px;color:var(--text3)">т/сут | 27,5% обв.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════
+     SLIDE 6 — MAIN CHART
+══════════════════════════════════════════════════ -->
+<section class="slide" id="s6">
+  <div class="sh"><img src="LOGO.png" class="sh-logo" alt="EASYMIX"><span class="sh-label">Главный график</span><span class="sh-num">06 / 12</span></div>
+  <div class="slide-body">
+    <div class="tag">Динамика</div>
+    <h2>Дебит нефти и обводнённость</h2>
+    <p class="sub">Скважина 343 | 15.01 – 08.04.2026</p>
+    <div class="ch-box">
+      <div class="ch-title">Qн (т/сут) — бирюзовая ось | Обводнённость (%) — красная ось</div>
+      <div class="ch-sub">Серая зона = период КРС | Пунктир = увеличение оборотов насоса (16.03)</div>
+      <div class="ch-wrap" style="height:360px"><canvas id="c1"></canvas></div>
+      <div style="display:flex;flex-wrap:wrap;gap:16px;margin-top:10px">
+        <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text2)"><span style="display:inline-block;width:20px;height:3px;background:var(--teal)"></span>Дебит нефти, т/сут</div>
+        <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text2)"><span style="display:inline-block;width:20px;height:3px;background:var(--red)"></span>Обводнённость, %</div>
+        <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text2)"><span style="display:inline-block;width:16px;height:10px;background:rgba(100,116,139,.2);border-radius:2px"></span>Период КРС</div>
+        <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text2)"><span style="display:inline-block;width:20px;height:2px;border-top:2px dashed var(--orange)"></span>Форсирование 140 об/мин</div>
+      </div>
+    </div>
+    <div class="info-box"><strong>Ключевые наблюдения:</strong> Красная зона (до 28.01) — скважина умирала при 85–89% обв. После запуска (03.02) — резкий рост дебита и снижение обводнённости. К пику 19.03: <strong>16,4 т/сут при 27,5%</strong>.</div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════
+     SLIDE 7 — PHASE ANALYSIS
+══════════════════════════════════════════════════ -->
+<section class="slide" id="s7">
+  <div class="sh"><img src="LOGO.png" class="sh-logo" alt="EASYMIX"><span class="sh-label">Фазовый анализ</span><span class="sh-num">07 / 12</span></div>
+  <div class="slide-body">
+    <div class="tag">Этапы трансформации</div>
+    <h2>5 фаз эффекта NanoCem</h2>
+    <p class="sub">От критической обводнённости до пикового дебита за 45 дней</p>
+    <div class="g2" style="margin-bottom:20px">
+      <div class="ch-box">
+        <div class="ch-title">Дебит нефти по ключевым точкам</div>
+        <div class="ch-sub">т/сут на контрольных датах</div>
+        <div class="ch-wrap" style="height:220px"><canvas id="c2"></canvas></div>
+      </div>
+      <div class="ch-box">
+        <div class="ch-title">Обводнённость по этапам</div>
+        <div class="ch-sub">% на контрольных датах</div>
+        <div class="ch-wrap" style="height:220px"><canvas id="c3"></canvas></div>
+      </div>
+    </div>
+    <div class="card">
+      <table>
+        <thead><tr><th>Фаза</th><th>Дата</th><th>Qн, т/сут</th><th>Обв., %</th><th>Изменение</th></tr></thead>
+        <tbody>
+          <tr class="hi-red"><td>До РИР</td><td>28.01</td><td>1,1</td><td>89,4%</td><td>— базовый минимум</td></tr>
+          <tr class="hi-orange"><td>Запуск</td><td>03.02</td><td>2,1</td><td>83,0%</td><td>+1,0 т/сут</td></tr>
+          <tr><td>2 недели</td><td>19.02</td><td>11,5</td><td>38,4%</td><td style="color:var(--teal)">+10,4 т/сут за 16 дней</td></tr>
+          <tr class="hi-green"><td>ПИК</td><td>19.03</td><td>16,4</td><td>27,5%</td><td>×14,9 от минимума</td></tr>
+          <tr><td>Стабилизация</td><td>08.04</td><td>14,4</td><td>38,0%</td><td style="color:var(--teal)">+13,3 (+×13,1)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="ok-box" style="margin-top:14px"><strong>Итог:</strong> За 45 дней после РИР дебит нефти вырос в <strong>×14,9 раза</strong> (от минимума 1,1) и в <strong>×6,3</strong> раза от средней добычи до РИР (2,6 т/сут). Обводнённость снижена на <strong>61,9 п.п.</strong> от минимума или на <strong>57,9 п.п.</strong> от среднего до РИР.</div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════
+     SLIDE 8 — SCATTER CHART
+══════════════════════════════════════════════════ -->
+<section class="slide" id="s8">
+  <div class="sh"><img src="LOGO.png" class="sh-logo" alt="EASYMIX"><span class="sh-label">Траектория эффекта</span><span class="sh-num">08 / 12</span></div>
+  <div class="slide-body">
+    <div class="tag">Корреляция</div>
+    <h2>Дебит vs Обводнённость</h2>
+    <p class="sub">Каждая точка — один день наблюдений. Вектор показывает направление улучшения.</p>
+    <div class="ch-box">
+      <div class="ch-title">Scatter: Qн (т/сут) vs Обводнённость (%) — по периодам</div>
+      <div class="ch-sub">Нижний правый угол = плохо | Верхний левый = хорошо</div>
+      <div class="ch-wrap" style="height:340px"><canvas id="c4"></canvas></div>
+      <div style="display:flex;flex-wrap:wrap;gap:14px;margin-top:10px">
+        <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text2)"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--red)"></span>До РИР (янв.)</div>
+        <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text2)"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--orange)"></span>1-е недели (фев.)</div>
+        <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text2)"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--teal)"></span>Рост (фев.–мар.)</div>
+        <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text2)"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--green)"></span>Пик (мар.)</div>
+        <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text2)"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#60A5FA"></span>Стабилизация (апр.)</div>
+      </div>
+    </div>
+    <div class="info-box"><strong>Красные точки</strong> — кластер в левом нижнем: высокая обводнённость (85–89%), низкий дебит (1,1–2,6). <strong>Зелёные точки</strong> — верхний правый угол: минимальная обв. (27,5%), максимальный дебит (16,4 т/сут). Стрелка вектора показывает непрерывное движение в правильном направлении.</div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════
+     SLIDE 9 — WATER CONE TECHNICAL
+══════════════════════════════════════════════════ -->
+<section class="slide" id="s9">
+  <div class="sh"><img src="LOGO.png" class="sh-logo" alt="EASYMIX"><span class="sh-label">Технический анализ</span><span class="sh-num">09 / 12</span></div>
+  <div class="slide-body">
+    <div class="tag">Конусообразование</div>
+    <h2>Почему после 19.03<br>обводнённость начала расти?</h2>
+    <p class="sub">После увеличения оборотов УШВН до 140 об/мин — физика пласта сработала.</p>
+    <div class="g2" style="align-items:start;margin-bottom:20px">
+      <!-- SVG Water Cone Diagram -->
+      <div class="card" style="padding:16px">
+        <div style="font-size:12px;font-weight:700;color:var(--teal2);margin-bottom:12px;letter-spacing:1px;text-transform:uppercase">Схема конусообразования</div>
+        <svg viewBox="0 0 320 360" style="width:100%;max-height:280px" class="wc-svg">
+          <!-- Rock layer top -->
+          <rect x="0" y="0" width="320" height="80" fill="#1a2535" rx="4"/>
+          <text x="10" y="20" fill="#64748B" font-size="10">Вышележащие породы</text>
+          <!-- Oil zone -->
+          <rect x="0" y="80" width="320" height="110" fill="rgba(13,148,136,0.12)"/>
+          <rect x="0" y="80" width="320" height="2" fill="var(--teal)" opacity=".4"/>
+          <text x="10" y="100" fill="#0D9488" font-size="11" font-weight="600">НЕФТЯНАЯ ЗАЛЕЖЬ</text>
+          <text x="10" y="116" fill="#64748B" font-size="9">Нефтяной пласт</text>
+          <!-- Oil droplets -->
+          <circle cx="60" cy="125" r="4" fill="rgba(13,148,136,.5)"/>
+          <circle cx="90" cy="135" r="3" fill="rgba(13,148,136,.4)"/>
+          <circle cx="130" cy="120" r="5" fill="rgba(13,148,136,.5)"/>
+          <circle cx="220" cy="130" r="4" fill="rgba(13,148,136,.4)"/>
+          <circle cx="270" cy="115" r="3" fill="rgba(13,148,136,.5)"/>
+          <!-- WOC line -->
+          <line x1="0" y1="190" x2="320" y2="190" stroke="#3B82F6" stroke-width="1.5" stroke-dasharray="6,3"/>
+          <text x="10" y="185" fill="#3B82F6" font-size="9">ВНК</text>
+          <!-- Water zone -->
+          <rect x="0" y="190" width="320" height="170" fill="rgba(59,130,246,0.1)"/>
+          <text x="10" y="210" fill="#3B82F6" font-size="11" font-weight="600">ПОДОШВЕННАЯ ВОДА</text>
+          <text x="10" y="225" fill="#64748B" font-size="9">Водоносный горизонт</text>
+          <!-- Water cone -->
+          <path d="M 160 155 L 100 340 L 220 340 Z" fill="rgba(59,130,246,0.3)" stroke="#3B82F6" stroke-width="1.5"/>
+          <text x="140" y="280" fill="#3B82F6" font-size="10" font-weight="700">КОНУС</text>
+          <text x="143" y="293" fill="#3B82F6" font-size="10" font-weight="700">ВОДЫ</text>
+          <!-- Arrows upward -->
+          <line x1="130" y1="260" x2="145" y2="175" stroke="#3B82F6" stroke-width="1.5" marker-end="url(#arr)"/>
+          <line x1="190" y1="265" x2="175" y2="175" stroke="#3B82F6" stroke-width="1.5" marker-end="url(#arr)"/>
+          <!-- Wellbore -->
+          <rect x="148" y="0" width="24" height="360" fill="#0D1B2A" stroke="#263D5A" stroke-width="1"/>
+          <!-- Pipe interior -->
+          <rect x="152" y="0" width="16" height="360" fill="rgba(27,46,68,.8)"/>
+          <!-- Perforation zone -->
+          <rect x="144" y="115" width="32" height="45" fill="none" stroke="var(--teal)" stroke-width="2" rx="2"/>
+          <text x="182" y="132" fill="var(--teal)" font-size="9" font-weight="700">ПЕРФ.</text>
+          <text x="182" y="144" fill="var(--teal)" font-size="9">ЗОНА</text>
+          <!-- Perforations -->
+          <line x1="144" y1="125" x2="136" y2="125" stroke="var(--teal)" stroke-width="1.5"/>
+          <line x1="144" y1="135" x2="136" y2="135" stroke="var(--teal)" stroke-width="1.5"/>
+          <line x1="144" y1="145" x2="136" y2="145" stroke="var(--teal)" stroke-width="1.5"/>
+          <line x1="176" y1="125" x2="184" y2="125" stroke="var(--teal)" stroke-width="1.5"/>
+          <line x1="176" y1="135" x2="184" y2="135" stroke="var(--teal)" stroke-width="1.5"/>
+          <line x1="176" y1="145" x2="184" y2="145" stroke="var(--teal)" stroke-width="1.5"/>
+          <!-- Pump arrow down the pipe -->
+          <path d="M 160 40 L 155 55 L 160 50 L 165 55 Z" fill="var(--orange)"/>
+          <text x="168" y="50" fill="var(--orange)" font-size="9">140 об/мин</text>
+          <!-- Arrow markers -->
+          <defs>
+            <marker id="arr" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+              <path d="M0,0 L0,8 L8,4 Z" fill="#3B82F6"/>
+            </marker>
+          </defs>
+        </svg>
+      </div>
+      <!-- Mechanisms -->
+      <div>
+        <div class="card card-orange" style="margin-bottom:12px">
+          <div style="font-size:14px;font-weight:700;margin-bottom:8px;color:var(--orange)">Механизм 1 — Конусообразование</div>
+          <div style="font-size:13px;color:var(--text2);line-height:1.6">Высокая депрессия от насоса на 140 об/мин создаёт «воронку» давления у забоя. Подошвенная вода поднимается конусом к интервалу перфорации. <br><strong style="color:var(--orange)">Чем сильнее откачка → тем агрессивнее конус.</strong></div>
+        </div>
+        <div class="card card-red" style="margin-bottom:12px">
+          <div style="font-size:14px;font-weight:700;margin-bottom:8px;color:var(--red)">Механизм 2 — Прорыв по пропласткам</div>
+          <div style="font-size:13px;color:var(--text2);line-height:1.6">Вода значительно подвижнее нефти. При форсированном отборе она «пролетает» по наиболее промытым каналам. NanoCem изолировал часть — но высокая депрессия давит через остаточные зоны.</div>
+        </div>
+        <div class="card" style="margin-bottom:12px">
+          <div style="font-size:13px;font-weight:700;margin-bottom:8px;color:var(--teal2)">Данные после пика (19.03 → 08.04)</div>
+          <table>
+            <thead><tr><th>Дата</th><th>Qн</th><th>Обв.</th></tr></thead>
+            <tbody>
+              <tr class="hi-green"><td>19.03 — ПИК</td><td>16,4</td><td>27,5%</td></tr>
+              <tr><td>25–26.03</td><td>16,0</td><td>28,4%</td></tr>
+              <tr><td>28–29.03</td><td>15,3</td><td>32,0%</td></tr>
+              <tr><td>01.04</td><td>14,2</td><td>35,7%</td></tr>
+              <tr class="hi-orange"><td>07–08.04</td><td>14,4</td><td>38,0%</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="ok-box"><strong>Оптимальный режим: 120–130 об/мин.</strong> Баланс между максимальным дебитом (~14–15 т/сут) и контролируемой обводнённостью (~30–35%). Дальнейшее форсирование контрпродуктивно.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════
+     SLIDE 10 — ECONOMICS
+══════════════════════════════════════════════════ -->
+<section class="slide" id="s10">
+  <div class="sh"><img src="LOGO.png" class="sh-logo" alt="EASYMIX"><span class="sh-label">Экономический эффект</span><span class="sh-num">10 / 12</span></div>
+  <div class="slide-body">
+    <div class="tag">Результаты в цифрах</div>
+    <h2>Что принёс<br>NanoCem UT-9</h2>
+    <p class="sub">Сравнение ключевых показателей до и после РИР</p>
+    <div class="g3" style="margin-bottom:20px">
+      <div class="ck t" style="border-radius:12px;padding:20px"><div class="ck-val" style="font-size:52px">×6,3</div><div class="ck-lbl">Рост дебита нефти<br>(пик 19.03 vs среднее до РИР)</div></div>
+      <div class="ck r" style="border-radius:12px;padding:20px"><div class="ck-val" style="font-size:52px">−57,9</div><div class="ck-lbl">п.п. снижение обводнённости<br>85,4% → 27,5% (пик)</div></div>
+      <div class="ck g" style="border-radius:12px;padding:20px"><div class="ck-val" style="font-size:52px">+13,8</div><div class="ck-lbl">т/сут прирост добычи нефти<br>2,6 → 16,4 т/сут (пик)</div></div>
+    </div>
+    <div class="card" style="margin-bottom:16px">
+      <h3 style="font-size:14px;margin-bottom:12px">Сравнение: ДО vs ПОСЛЕ РИР</h3>
+      <table>
+        <thead><tr><th>Показатель</th><th>ДО РИР (январь)</th><th>ПОСЛЕ (пик 19.03)</th><th>Текущий (08.04)</th><th>Изменение (пик)</th></tr></thead>
+        <tbody>
+          <tr><td>Дебит нефти, т/сут</td><td style="color:var(--red)">2,6</td><td style="color:var(--green);font-weight:700">16,4</td><td style="color:var(--teal)">14,4</td><td style="color:var(--green);font-weight:700">+13,8 (+×6,3)</td></tr>
+          <tr><td>Обводнённость, %</td><td style="color:var(--red)">85,4%</td><td style="color:var(--green);font-weight:700">27,5%</td><td style="color:var(--teal)">38,0%</td><td style="color:var(--green);font-weight:700">−57,9 п.п.</td></tr>
+          <tr><td>Дебит жидкости, м³/сут</td><td style="color:var(--red)">~20,1</td><td style="color:var(--teal)">~25–26</td><td style="color:var(--teal)">~25–26</td><td style="color:var(--teal)">+25%</td></tr>
+          <tr><td>Добыча нефти, т/мес.</td><td style="color:var(--red)">~78 т</td><td style="color:var(--green);font-weight:700">~492 т</td><td style="color:var(--teal)">~432 т</td><td style="color:var(--green);font-weight:700">+354–414 т/мес.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="ok-box">
+      <strong>Простая математика:</strong> До РИР: 2,6 × 30 = <strong>78 т/месяц</strong>. После РИР: 14,4 × 30 = <strong>432 т/месяц</strong>. Прирост: <strong>+354 тонны нефти в месяц</strong> только с одной скважины.
+    </div>
+    <div class="ch-box">
+      <div class="ch-title">Сравнение ДО / ПОСЛЕ / ПИКОВЫЙ</div>
+      <div class="ch-wrap" style="height:180px"><canvas id="c5"></canvas></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════
+     SLIDE 11 — FULL DATA TABLE
+══════════════════════════════════════════════════ -->
+<section class="slide" id="s11">
+  <div class="sh"><img src="LOGO.png" class="sh-logo" alt="EASYMIX"><span class="sh-label">Полная таблица данных</span><span class="sh-num">11 / 12</span></div>
+  <div class="slide-body">
+    <div class="tag">Верификация</div>
+    <h2>Ежедневная динамика</h2>
+    <p class="sub">Скважина 343 | 15.01 – 08.04.2026 | Суточные режимные листы</p>
+    <div class="g2">
+      <div class="card">
+        <table>
+          <thead><tr><th>Дата</th><th>Qн, т/сут</th><th>Обв., %</th></tr></thead>
+          <tbody>
+            <tr><td>15–20.01</td><td>2,6</td><td>85,4</td></tr>
+            <tr><td>21–24.01</td><td>2,3</td><td>86,0–86,5</td></tr>
+            <tr><td>25–26.01</td><td>2,6</td><td>84,0</td></tr>
+            <tr class="hi-red"><td>27.01</td><td>1,7</td><td>89,4</td></tr>
+            <tr class="hi-red"><td>28.01</td><td>1,1</td><td>89,4</td></tr>
+            <tr class="hi-orange"><td>29.01–02.02</td><td>— КРС —</td><td>—</td></tr>
+            <tr><td>03.02</td><td>2,1</td><td>83,0</td></tr>
+            <tr><td>04–05.02</td><td>6,2</td><td>66,8–66,7</td></tr>
+            <tr><td>06–09.02</td><td>6,5–6,6</td><td>64,7–65,0</td></tr>
+            <tr><td>10.02</td><td>7,0</td><td>62,8</td></tr>
+            <tr><td>11–18.02</td><td>6,9</td><td>62,8–62,9</td></tr>
+            <tr class="hi-green"><td>19–22.02</td><td>11,5</td><td>38,4</td></tr>
+            <tr><td>23–27.02</td><td>12,3–13,3</td><td>34,5</td></tr>
+            <tr><td>28.02–02.03</td><td>13,3</td><td>35,6</td></tr>
+            <tr><td>03.03</td><td>13,9</td><td>35,0</td></tr>
+            <tr><td>05–09.03</td><td>14,0–14,1</td><td>35,0–35,1</td></tr>
+            <tr><td>10–15.03</td><td>14,3</td><td>34,9–35,0</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card">
+        <table>
+          <thead><tr><th>Дата</th><th>Qн, т/сут</th><th>Обв., %</th></tr></thead>
+          <tbody>
+            <tr class="hi-orange"><td>16.03 ↑140 об/мин</td><td>14,9</td><td>33,2</td></tr>
+            <tr><td>17.03</td><td>15,6</td><td>31,9</td></tr>
+            <tr><td>18.03</td><td>15,9</td><td>29,8</td></tr>
+            <tr class="hi-green"><td>19.03 — ПИК</td><td>16,4</td><td>27,5</td></tr>
+            <tr><td>20–24.03</td><td>16,0–16,3</td><td>27,5</td></tr>
+            <tr><td>25–26.03</td><td>16,0</td><td>28,4</td></tr>
+            <tr><td>27.03</td><td>15,6</td><td>30,2</td></tr>
+            <tr><td>28–29.03</td><td>15,3</td><td>32,0</td></tr>
+            <tr><td>30–31.03</td><td>14,9</td><td>34,0</td></tr>
+            <tr><td>01.04</td><td>14,2</td><td>35,7</td></tr>
+            <tr><td>02–03.04</td><td>14,2–14,3</td><td>36,0</td></tr>
+            <tr><td>04–06.04</td><td>14,3</td><td>37,2</td></tr>
+            <tr><td>07–08.04</td><td>14,4</td><td>38,0</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════
+     SLIDE 12 — CONCLUSIONS
+══════════════════════════════════════════════════ -->
+<section class="slide" id="s12">
+  <div class="sh"><img src="LOGO.png" class="sh-logo" alt="EASYMIX"><span class="sh-label">Выводы и рекомендации</span><span class="sh-num">12 / 12</span></div>
+  <div class="slide-body">
+    <div class="tag">Итоги</div>
+    <h2>NanoCem UT-9<br>доказал эффективность</h2>
+    <p class="sub">Результаты РИР на скважине 343 | Месторождение Каратюбе</p>
+
+    <div style="margin-bottom:16px">
+      <div class="check"><div class="check-ico">✓</div><div class="check-txt"><strong>Дебит нефти вырос в 6,3 раза</strong><span>С 2,6 до 16,4 т/сут (пик 19.03.2026). Текущий стабильный уровень: 14,4 т/сут.</span></div></div>
+      <div class="check"><div class="check-ico">✓</div><div class="check-txt"><strong>Обводнённость снижена на 57,9 п.п.</strong><span>С 85,4% до 27,5% (пик). Текущая: 38,0% — всё ещё в 2,2 раза лучше исходного.</span></div></div>
+      <div class="check"><div class="check-ico">✓</div><div class="check-txt"><strong>Эффект проявился быстро</strong><span>Уже через сутки после запуска (04.02) дебит вырос до 6,2 т/сут. За 16 дней — 11,5 т/сут.</span></div></div>
+      <div class="check"><div class="check-ico">✓</div><div class="check-txt"><strong>Долгосрочная устойчивость</strong><span>Показатели улучшались 45 дней подряд без единого ухудшения. Прочный тампон в микротрещинах.</span></div></div>
+      <div class="check"><div class="check-ico">✓</div><div class="check-txt"><strong>Превзошёл ожидания</strong><span>Результат существенно выше типичных показателей стандартных методов изоляции на казахстанских месторождениях.</span></div></div>
+    </div>
+
+    <div class="warn-box"><strong>⚠️ Критическое наблюдение:</strong> Форсирование до 140 об/мин дало кратковременный пик (16,4 т/сут), но спровоцировало конусообразование и рост обводнённости. <strong>Оптимальный режим: 120–130 об/мин.</strong></div>
+
+    <div class="g3" style="margin-top:16px">
+      <div class="card card-teal">
+        <div style="font-size:22px;font-weight:900;color:var(--teal);margin-bottom:8px">Рек. 1</div>
+        <div style="font-weight:700;margin-bottom:6px;font-size:13px">Режим насоса</div>
+        <div style="font-size:12px;color:var(--text2);line-height:1.5">Стабилизировать обороты на <strong style="color:var(--teal)">120 об/мин</strong>. Контрольный замер через 30 дней.</div>
+      </div>
+      <div class="card card-green">
+        <div style="font-size:22px;font-weight:900;color:var(--green);margin-bottom:8px">Рек. 2</div>
+        <div style="font-weight:700;margin-bottom:6px;font-size:13px">Тиражирование</div>
+        <div style="font-size:12px;color:var(--text2);line-height:1.5">Рассмотреть применение NanoCem UT-9 на <strong style="color:var(--green)">скв. 345</strong> и других объектах с аналогичной геологией.</div>
+      </div>
+      <div class="card card-orange">
+        <div style="font-size:22px;font-weight:900;color:var(--orange);margin-bottom:8px">Рек. 3</div>
+        <div style="font-weight:700;margin-bottom:6px;font-size:13px">ГДИ</div>
+        <div style="font-size:12px;color:var(--text2);line-height:1.5">Провести <strong style="color:var(--orange)">гидродинамические исследования</strong> для уточнения положения ВНК и оптимальной депрессии.</div>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:20px;padding:16px;background:var(--bg2);border-radius:12px;border:1px solid var(--bg3)">
+      <img src="LOGO.png" style="height:28px;background:#fff;border-radius:6px;padding:4px 10px;margin-bottom:8px" alt="EASYMIX">
+      <div style="font-size:12px;color:var(--text3)">ТОО «ЭкоМикс» | Актобе, Промзона, уч. 679/17 | +7 (707) 539 00 00 | EASYMIX.KZ</div>
+      <div style="font-size:11px;color:var(--text3);margin-top:4px">Данные актуальны на 08.04.2026 г. | Скважина 343, м/р Каратюбе</div>
+    </div>
+  </div>
+</section>
+
+</div><!-- #deck -->
+
+<!-- CONTROLS -->
+<div id="ctrl">
+  <div class="ctrl-nav">
+    <button class="btn" id="btnPrev">← Назад</button>
+    <span id="counter">1 / 12</span>
+    <button class="btn" id="btnNext">Вперёд →</button>
+  </div>
+  <div class="dots" id="dots"></div>
+  <button class="btn btn-dl" id="btnDl">⬇ Скачать PDF</button>
+</div>
+
+<script>
+// ═══ IMAGES ═══
+window.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('infographic-img').src = 'ChatGPT Image 8 апр. 2026 г., 15_42_34.png';
+  document.getElementById('gemini-img').src = 'Gemini_Generated_Image_bcke6pbcke6pbcke.png';
+});
+
+// ═══ NAVIGATION ═══
+const slides = Array.from(document.querySelectorAll('.slide'));
+const total = slides.length;
+let cur = 0;
+let chartsInited = new Set();
+
+function goTo(n) {
+  if (n < 0 || n >= total) return;
+  slides[cur].classList.remove('active');
+  slides[cur].classList.add('exit');
+  setTimeout(() => slides[cur < n ? cur : n + 1]?.classList.remove('exit'), 500);
+  cur = n;
+  slides[cur].classList.remove('exit');
+  slides[cur].classList.add('active');
+  updateUI();
+  if (!chartsInited.has(cur)) { initChart(cur); chartsInited.add(cur); }
+}
+
+function updateUI() {
+  document.getElementById('counter').textContent = `${cur + 1} / ${total}`;
+  document.getElementById('progress').style.width = `${((cur + 1) / total) * 100}%`;
+  document.getElementById('btnPrev').disabled = cur === 0;
+  document.getElementById('btnNext').disabled = cur === total - 1;
+  document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('on', i === cur));
+}
+
+// Dots
+const dotsEl = document.getElementById('dots');
+slides.forEach((_, i) => {
+  const d = document.createElement('button');
+  d.className = 'dot' + (i === 0 ? ' on' : '');
+  d.onclick = () => goTo(i);
+  dotsEl.appendChild(d);
+});
+
+document.getElementById('btnPrev').onclick = () => goTo(cur - 1);
+document.getElementById('btnNext').onclick = () => goTo(cur + 1);
+document.getElementById('btnDl').onclick = () => window.print();
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') goTo(cur + 1);
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') goTo(cur - 1);
+  if (e.key === 'Home') goTo(0);
+  if (e.key === 'End') goTo(total - 1);
+});
+
+// Touch swipe
+let tx = 0;
+document.addEventListener('touchstart', e => { tx = e.touches[0].clientX; });
+document.addEventListener('touchend', e => {
+  const dx = tx - e.changedTouches[0].clientX;
+  if (Math.abs(dx) > 50) { dx > 0 ? goTo(cur + 1) : goTo(cur - 1); }
+});
+
+updateUI();
+
+// ═══ CHART DATA ═══
+const labels = ['15.01','16.01','17.01','18.01','19.01','20.01','21.01','22.01','23.01','24.01','25.01','26.01','27.01','28.01','03.02','04.02','05.02','06.02','07.02','08.02','09.02','10.02','11.02','12.02','13.02','14.02','15.02','16.02','17.02','18.02','19.02','20.02','21.02','22.02','23.02','24.02','25.02','26.02','27.02','28.02','01.03','02.03','03.03','05.03','06.03','07.03','08.03','09.03','10.03','11.03','12.03','13.03','14.03','15.03','16.03','17.03','18.03','19.03','20.03','21.03','22.03','23.03','24.03','25.03','26.03','27.03','28.03','29.03','30.03','31.03','01.04','02.04','03.04','04.04','05.04','06.04','07.04','08.04'];
+const qn   = [2.6,2.6,2.6,2.6,2.6,2.6,2.3,2.3,2.3,2.3,2.6,2.6,1.7,1.1,2.1,6.2,6.2,6.5,6.5,6.6,6.6,7.0,6.9,6.9,6.9,6.9,6.9,6.9,6.9,6.9,11.5,11.5,11.5,11.5,12.3,13.3,13.3,13.3,13.3,13.3,13.3,13.3,13.9,14.0,14.0,14.0,14.1,14.1,14.3,14.3,14.3,14.3,14.3,14.3,14.9,15.6,15.9,16.4,16.3,16.0,16.0,16.0,16.0,16.0,16.0,15.6,15.3,15.3,14.9,14.9,14.2,14.2,14.3,14.3,14.3,14.3,14.4,14.4];
+const obv  = [85.4,85.4,85.4,85.4,85.4,85.4,86.0,86.0,86.0,86.5,84.0,84.0,89.4,89.4,83.0,66.8,66.7,65.0,64.7,64.7,64.7,62.8,62.8,62.8,62.8,62.8,62.9,62.9,62.9,62.9,38.4,38.4,38.4,38.4,34.5,34.5,34.5,34.5,34.5,35.6,35.6,35.6,35.0,35.1,35.1,35.1,35.1,35.1,35.0,35.0,35.0,34.9,34.9,34.9,33.2,31.9,29.8,27.5,27.5,27.5,27.5,27.5,27.5,28.4,28.4,30.2,32.0,32.0,34.0,34.0,35.7,36.0,36.0,37.2,37.2,37.2,38.0,38.0];
+
+const C = { teal:'#0D9488', teal2:'#14B8A6', red:'#EF4444', orange:'#F97316', green:'#22C55E', blue:'#60A5FA' };
+Chart.defaults.color = '#94A3B8';
+Chart.defaults.font.family = "'Inter',sans-serif";
+Chart.defaults.font.size = 11;
+
+const krsPlugin = {
+  id:'krs',
+  beforeDraw(chart){
+    const {ctx,chartArea,scales} = chart;
+    if(!chartArea) return;
+    const x1 = scales.x.getPixelForValue(13);
+    const x2 = scales.x.getPixelForValue(14);
+    ctx.save();
+    ctx.fillStyle='rgba(100,116,139,.15)';
+    ctx.fillRect(x1,chartArea.top,x2-x1,chartArea.bottom-chartArea.top);
+    ctx.restore();
+    const xOb = scales.x.getPixelForValue(54);
+    ctx.save();
+    ctx.strokeStyle=C.orange; ctx.lineWidth=1.5; ctx.setLineDash([4,3]);
+    ctx.beginPath(); ctx.moveTo(xOb,chartArea.top); ctx.lineTo(xOb,chartArea.bottom); ctx.stroke();
+    ctx.setLineDash([]); ctx.restore();
+  }
+};
+
+function initChart(idx) {
+  const tip = { backgroundColor:'#0D1B2A', borderColor:'#263D5A', borderWidth:1 };
+  const grid = { color:'rgba(38,61,90,.4)' };
+
+  // Slide 5 → Chart 1 (main dual axis)
+  if (idx === 5) {
+    new Chart(document.getElementById('c1').getContext('2d'), {
+      type:'line', plugins:[krsPlugin],
+      data:{ labels, datasets:[
+        { label:'Дебит нефти, т/сут', data:qn, borderColor:C.teal, backgroundColor:'rgba(13,148,136,.07)', borderWidth:2.5, fill:true, tension:.3, yAxisID:'y',
+          pointRadius: qn.map((_,i)=>[13,14,30,54,57].includes(i)?6:1.5),
+          pointBackgroundColor: qn.map((_,i)=>i===57?C.green:i===13?C.red:C.teal)
+        },
+        { label:'Обводнённость, %', data:obv, borderColor:C.red, borderWidth:2, fill:false, tension:.3, yAxisID:'y1',
+          pointRadius: obv.map((_,i)=>[13,14,30,57].includes(i)?5:1),
+          pointBackgroundColor:C.red
+        }
+      ]},
+      options:{ responsive:true, maintainAspectRatio:false, interaction:{mode:'index',intersect:false},
+        plugins:{ legend:{display:false}, tooltip:tip },
+        scales:{
+          x:{ grid, ticks:{maxTicksLimit:20,maxRotation:45,font:{size:9}} },
+          y:{ min:0,max:19, position:'left', title:{display:true,text:'т/сут',color:C.teal,font:{size:11}}, grid, ticks:{color:C.teal} },
+          y1:{ min:0,max:100, position:'right', title:{display:true,text:'Обв. %',color:C.red,font:{size:11}}, grid:{display:false}, ticks:{color:C.red} }
+        }
+      }
+    });
+  }
+
+  // Slide 6 → Charts 2 & 3
+  if (idx === 6) {
+    const dates = ['28.01\nдо РИР','03.02\nзапуск','04.02\nперевод','19.02\nскачок','24.02','19.03\nПИК','08.04\nстаб.'];
+    const qnPts = [1.1,2.1,6.2,11.5,13.3,16.4,14.4];
+    const obvPts = [89.4,83.0,66.8,38.4,34.5,27.5,38.0];
+    const colors = ['rgba(239,68,68,.7)','rgba(249,115,22,.7)','rgba(234,179,8,.7)','rgba(34,197,94,.7)','rgba(13,148,136,.7)','rgba(13,148,136,1)','rgba(96,165,250,.7)'];
+    const bcolors = [C.red,C.orange,'#EAB308',C.green,C.teal,C.teal,C.blue];
+    const barOpts = (label) => ({ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false},tooltip:tip}, scales:{x:{grid:{display:false}},y:{grid,ticks:{stepSize:4}}} });
+
+    new Chart(document.getElementById('c2').getContext('2d'), {
+      type:'bar', data:{ labels:dates, datasets:[{label:'Qн, т/сут', data:qnPts, backgroundColor:colors, borderColor:bcolors, borderWidth:1.5, borderRadius:6}]},
+      options:{...barOpts('т/сут'), scales:{x:{grid:{display:false}},y:{min:0,max:19,grid,title:{display:true,text:'т/сут'}}}}
+    });
+    new Chart(document.getElementById('c3').getContext('2d'), {
+      type:'bar', data:{ labels:dates, datasets:[{label:'Обв. %', data:obvPts, backgroundColor:colors.slice().reverse(), borderColor:bcolors.slice().reverse(), borderWidth:1.5, borderRadius:6}]},
+      options:{...barOpts('%'), scales:{x:{grid:{display:false}},y:{min:0,max:100,grid,title:{display:true,text:'%'}}}}
+    });
+  }
+
+  // Slide 7 → Scatter
+  if (idx === 7) {
+    const before = [{x:2.6,y:85.4},{x:2.6,y:85.4},{x:2.3,y:86.0},{x:2.3,y:86.5},{x:2.6,y:84.0},{x:1.7,y:89.4},{x:1.1,y:89.4}];
+    const early  = [{x:2.1,y:83.0},{x:6.2,y:66.8},{x:6.5,y:65.0},{x:6.6,y:64.7},{x:7.0,y:62.8},{x:6.9,y:62.9}];
+    const growth = [{x:11.5,y:38.4},{x:12.3,y:34.5},{x:13.3,y:34.5},{x:13.9,y:35.0},{x:14.0,y:35.1},{x:14.3,y:35.0},{x:14.3,y:34.9}];
+    const peak   = [{x:14.9,y:33.2},{x:15.6,y:31.9},{x:15.9,y:29.8},{x:16.4,y:27.5}];
+    const stab   = [{x:16.0,y:27.5},{x:16.0,y:28.4},{x:15.6,y:30.2},{x:15.3,y:32.0},{x:14.9,y:34.0},{x:14.2,y:35.7},{x:14.3,y:36.0},{x:14.4,y:38.0}];
+
+    const arrowPlugin = {
+      id:'arrow', afterDraw(chart){
+        const {ctx,chartArea,scales} = chart;
+        const x1=scales.x.getPixelForValue(1.5), y1=scales.y.getPixelForValue(87);
+        const x2=scales.x.getPixelForValue(15.5), y2=scales.y.getPixelForValue(29);
+        ctx.save();
+        ctx.strokeStyle='rgba(13,148,136,.4)'; ctx.lineWidth=2; ctx.setLineDash([6,4]);
+        ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+        // Arrow head
+        const angle=Math.atan2(y2-y1,x2-x1);
+        ctx.setLineDash([]); ctx.strokeStyle=C.teal; ctx.lineWidth=2; ctx.fillStyle=C.teal;
+        ctx.beginPath();
+        ctx.moveTo(x2,y2);
+        ctx.lineTo(x2-12*Math.cos(angle-0.4),y2-12*Math.sin(angle-0.4));
+        ctx.lineTo(x2-12*Math.cos(angle+0.4),y2-12*Math.sin(angle+0.4));
+        ctx.closePath(); ctx.fill();
+        ctx.restore();
+      }
+    };
+    new Chart(document.getElementById('c4').getContext('2d'), {
+      type:'scatter', plugins:[arrowPlugin],
+      data:{ datasets:[
+        {label:'До РИР', data:before, backgroundColor:C.red, borderColor:C.red, pointRadius:6},
+        {label:'1-е недели', data:early, backgroundColor:C.orange, borderColor:C.orange, pointRadius:6},
+        {label:'Рост', data:growth, backgroundColor:C.teal, borderColor:C.teal, pointRadius:6},
+        {label:'Пик', data:peak, backgroundColor:C.green, borderColor:C.green, pointRadius:8},
+        {label:'Стабилизация', data:stab, backgroundColor:C.blue, borderColor:C.blue, pointRadius:6},
+      ]},
+      options:{ responsive:true, maintainAspectRatio:false,
+        plugins:{ legend:{display:false}, tooltip:{...tip,callbacks:{label:c=>`Qн: ${c.raw.x} т/сут | Обв: ${c.raw.y}%`}}},
+        scales:{
+          x:{ min:0, max:18, title:{display:true,text:'Дебит нефти, т/сут',color:C.teal}, grid },
+          y:{ min:20, max:100, reverse:true, title:{display:true,text:'Обводнённость, %',color:C.red}, grid }
+        }
+      }
+    });
+  }
+
+  // Slide 9 → Compare bar chart
+  if (idx === 9) {
+    new Chart(document.getElementById('c5').getContext('2d'), {
+      type:'bar',
+      data:{ labels:['Дебит нефти (т/сут)','Обводнённость (%)'],
+        datasets:[
+          {label:'До РИР', data:[2.6,89.4], backgroundColor:'rgba(239,68,68,.7)', borderColor:C.red, borderWidth:1.5, borderRadius:6},
+          {label:'Пик (19.03)', data:[16.4,27.5], backgroundColor:'rgba(13,148,136,.9)', borderColor:C.teal, borderWidth:1.5, borderRadius:6},
+          {label:'Стабильный (08.04)', data:[14.4,38.0], backgroundColor:'rgba(34,197,94,.7)', borderColor:C.green, borderWidth:1.5, borderRadius:6},
+        ]
+      },
+      options:{ responsive:true, maintainAspectRatio:false,
+        plugins:{ legend:{display:true,position:'top',labels:{boxWidth:10,font:{size:11}}}, tooltip:tip },
+        scales:{ x:{grid:{display:false}}, y:{min:0,max:100,grid} }
+      }
+    });
+  }
+}
+
+// Init first chart visible slide (slide index 5 = slide 6)
+// Charts init on demand when slide becomes active
+
+// Init current slide charts if any
+initChart(0);
+</script>
+</body>
+</html>
